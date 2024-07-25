@@ -28,6 +28,9 @@
 						</div>
 						<span v-if="errors.password" class="text-danger">{{ errors.password[0] }}</span>
 						<br>
+						<router-link :to="{ name: 'UserRegister' }" class="under"
+							style="text-decoration: none;color: var(--user-color);">Don't you have an account ? Register now!</router-link><br>
+					
 						<a class="under" style="text-decoration: none;color: var(--user-color);" href="#"
 							data-toggle="modal" data-target="#exampleModalForgotPassword">Forgot your password ?
 						</a><br>
@@ -36,6 +39,7 @@
 								class="fa-solid fa-arrow-right-to-bracket"></i> Login</button>
 					</form>
 				</div>
+
 				<div class="modal fade" id="exampleModalForgotPassword" tabindex="-1" role="dialog"
 					aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog" role="document" style="margin: 1.75rem auto; ">
@@ -83,13 +87,8 @@ export default {
 			user: {
 				id: null,
 				email: null,
-				google_id: null,
-				facebook_id: null,
-				github_id: null,
-				gitlab_id: null,
 				name: null,
 				avatar: null,
-				role: null,
 				email_verified_at: null,
 				created_at: null,
 				updated_at: null,
@@ -99,7 +98,7 @@ export default {
 			},
 			isShow: false,
 			loginUser: {
-				email: 'duyentran@yopmail.com',
+				email: 'kimtientran0410@yopmail.com',
 				password: '123456'
 			},
 			resetPassword: {
@@ -112,7 +111,7 @@ export default {
 		}
 	},
 	setup() {
-		document.title = "LINE OA Login | LINE Bot";
+		document.title = "Blog Login | Blog";
 	},
 	mounted() {
 		var appMain = window.document.getElementById('appMain');

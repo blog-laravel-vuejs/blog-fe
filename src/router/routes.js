@@ -10,10 +10,12 @@ import ManageManager from "@/components/admin/admin-dashboard/manage-manager/Man
 import AdminLogin from "@/components/admin/auth/AdminLogin";
 
 // user
+import UserRegister from "@/components/user/auth/UserRegister";
 import UserMain from "@/components/user/UserMain";
 import AccountSetting from "@/components/user/account-setting/AccountSetting";
 import UserResetPassword from "@/components/user/auth/UserResetPassword";
 import UserLogin from "@/components/user/auth/UserLogin";
+
 
 
 //Other
@@ -52,6 +54,12 @@ const loggedAdmin = (to, from, next) => {
 
 const routes = [
   {
+    path: "/register",
+    component: UserRegister,
+    name: "UserRegister",
+    beforeEnter: loggedUser,
+  },
+  {
     path: "/login",
     component: UserLogin,
     name: "UserLogin",
@@ -75,7 +83,6 @@ const routes = [
         name: "AccountSetting",
         component: AccountSetting,
       },
-    
     ],
   },
   {
