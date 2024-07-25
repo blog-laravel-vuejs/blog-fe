@@ -99,25 +99,24 @@ export default {
        
     },
     methods: {
-        register: async function () {
-            try {
-                const { messages } = await UserRequest.post('user/register', this.registerUser, true);
-                emitEvent('eventSuccess', messages[0]);
-                for (let key in this.errors) this.errors[key] = null;
-                this.$router.push({ name: 'UserRegister' });
-            }
-            catch (error) {
-                if (error.errors) this.errors = error.errors;
-                else for (let key in this.errors) this.errors[key] = null;
-                if (error.messages) {
-                    error.messages.forEach(message => {
-                        emitEvent('eventError', message);
-                    });
-                }
-            }
+        register:  function () {
+            UserRequest.post('user/register', this.registerUser, true)
+                    .then(data => {
+                        console.log(data);
+                        emitEvent('eventSuccess', data.message);
+                        // this.$router.push({ name: 'UserRegister' });
+                })
+                .catch(error => {
+                    if (error.errors) this.errors = error.errors;
+                    else for (let key in this.errors) this.errors[key] = null;
+                    if (error.message) {
+                        emitEvent('eventError', error.message);
+                    }
+                });
+            },
         },
     }
-}
+
 </script>
 
 <style scoped>
