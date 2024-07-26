@@ -98,7 +98,7 @@ export default {
 			},
 			isShow: false,
 			loginUser: {
-				email: 'kimtientran0410@yopmail.com',
+				email: 'tientran0410@yopmail.com',
 				password: '123456'
 			},
 			resetPassword: {
@@ -121,18 +121,23 @@ export default {
 		login: function () {
 			UserRequest.post('user/login', this.loginUser, true)
 				.then(data => {
-					// console.log(data);
+					console.log(data);
 					this.user = data.data;
 					window.localStorage.setItem('user', JSON.stringify(this.user));
-					emitEvent('eventSuccess', data.message); // loi nam o day nha e !
+					// emitEvent('eventSuccess', data.message); // loi nam o day nha e !
+					data.messages.forEach(message => {
+						emitEvent('eventSuccess', message);
+					});
 					this.$router.push({ name: 'AccountSetting' });
 				})
 				.catch(error => {
 					if (error.errors) this.errors = error.errors;
 					else for (let key in this.errors) this.errors[key] = null;
 
-					if (error.message) {
-						emitEvent('eventError', error.message);
+					if (error.messages) {
+						error.messages.forEach(message => {
+							emitEvent('eventError', message);
+						});
 					}
 				})
 		},
