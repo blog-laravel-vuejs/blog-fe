@@ -78,6 +78,7 @@ export default {
 				emitEvent('eventSuccess', messages[0]);
 				for (let key in this.errors) this.errors[key] = null;
 				this.$router.push({ name: 'UserLogin' });
+				
 			}
 			catch (error) {
 				if (error.errors) this.errors = error.errors;
