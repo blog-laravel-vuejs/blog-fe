@@ -18,7 +18,8 @@
                     <div class="row mt-3">
                         <div class="col-12">
                             <label><i class="fa-solid fa-cake-candles"></i> Date of birth</label><input
-                                v-model="user.date_of_birth" type="date" required format="YYYY MM DD" class="form-control">
+                                v-model="user.date_of_birth" type="date" required format="YYYY MM DD"
+                                class="form-control">
                             <span v-if="errors.date_of_birth" class="text-danger">{{ errors.date_of_birth[0] }}</span>
 
                         </div>
@@ -39,12 +40,14 @@
                                 <div class="form-check form-check-inline">
                                     <input required v-model="user.gender" class="form-check-input" type="radio"
                                         name="inlineRadioOptions" id="male" value="1">
-                                    <label style="color: #0085FF;" class="form-check-label" for="inlineRadio1">Men</label>
+                                    <label style="color: #0085FF;" class="form-check-label"
+                                        for="inlineRadio1">Men</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input required v-model="user.gender" class="form-check-input" type="radio"
                                         name="inlineRadioOptions" id="female" value="0">
-                                    <label style="color: #0085FF;" class="form-check-label" for="inlineRadio2">Women</label>
+                                    <label style="color: #0085FF;" class="form-check-label"
+                                        for="inlineRadio2">Women</label>
                                 </div>
                             </div>
                             <span v-if="errors.gender" class="text-danger">{{ errors.gender[0] }}</span>
@@ -75,17 +78,17 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-12">
-                            <label><i class="fa-brands fa-line"></i> LINE User ID</label>
-                            <input class="form-control" disabled v-model="user.line_user_id" placeholder="Username"
+                            <label><i class="fa-brands fa-line"></i>Username</label>
+                            <input class="form-control" disabled v-model="user.username" placeholder="Username"
                                 type="text">
                         </div>
                     </div>
-                    <div class="row mt-3">
+                    <!--  <div class="row mt-3">
                         <div class="col-12">
                             <label><i class="fa-solid fa-user-check"></i> Role</label>
                             <input class="form-control" disabled v-model="user.role" placeholder="Role" type="text">
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="col-2">
                     <div class="avatarUser">
@@ -102,7 +105,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>  
+                    </div>
                 </div>
             </div>
             <div>
@@ -129,27 +132,24 @@ import UserRequest from '@/restful/UserRequest';
 import useEventBus from '@/composables/useEventBus'
 import ChangePassword from '@/components/user/account-setting/ChangePassword'
 const { emitEvent } = useEventBus();
-import config from '@/config';
+
 
 export default {
     name: "AccountSetting",
     data() {
         return {
-            config:config,
+            // config:config,
             user: {
                 id: null,
                 email: null,
-                role: null,
-                line_user_id: null,
-                channel_id: null,
                 name: null,
+                username: null,
                 phone: null,
                 avatar: null,
                 address: null,
                 gender: null,
                 date_of_birth: null,
                 is_block: null,
-                is_delete: null,
                 email_verified_at: null,
                 created_at: null,
                 updated_at: null,
@@ -169,11 +169,12 @@ export default {
         }
     },
     setup() {
-        document.title = "Account Setting | LINE Bot";
+        document.title = "Account Setting | Blog User";
     },
     async mounted() {
         this.user = JSON.parse(localStorage.getItem('user'));
-        this.previewImageSrc = this.config.URL + this.user.avatar;
+        // this.previewImageSrc = this.config.URL + this.user.avatar;
+        this.previewImageSrc =this.user.avatar;
         emitEvent('eventTitleHeader', 'Account Setting');
     },
     components: {
