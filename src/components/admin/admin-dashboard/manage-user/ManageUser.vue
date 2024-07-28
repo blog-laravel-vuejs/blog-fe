@@ -164,7 +164,7 @@ export default {
             page: searchParams.get('page') || 1,
             typesort: searchParams.get('typesort') || 'new',
             sortlatest: searchParams.get('sortlatest') || 'true',
-            is_block: searchParams.get('is_block') || '0',
+            is_block: searchParams.get('is_block') || '1',
         }
         this.getUsers();
         onEvent('eventRegetUsers', () => { this.getUsers(); });
