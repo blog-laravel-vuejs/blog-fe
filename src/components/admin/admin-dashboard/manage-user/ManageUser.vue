@@ -15,6 +15,7 @@
                     <option value="name">Name</option>
                     <option value="address">Address</option>
                     <option value="gender">Gender</option>
+                    <option value="gender">Username</option>
                 </select>
             </div>
             <div class="col-2 pl-0">
@@ -26,8 +27,8 @@
             <div class="col-2 pl-0">
                 <select content="Filter by block" v-tippy class="form-control" v-model="big_search.is_block">
                     <option value="all">All User</option>
-                    <option value="1">Locked User</option>
-                    <option value="0">Normal User</option>
+                    <option value="0">Locked User</option>
+                    <option value="1">Normal User</option>
                 </select>
             </div>
             <div class="col-3 pl-0">
@@ -88,7 +89,14 @@
                         <td class="table-cell text-center displayGender  ">{{ formatGender(user.gender) }}</td>
                         <td class="table-cell text-center displayTime  ">{{ formatDate(user.created_at) }}</td>
                         <td class="table-cell text-center">{{ formatDate(user.updated_at) }}</td>
-                       
+                        <td class="table-cell text-center">
+                            <button data-toggle="modal" data-target="#lockUser"
+                                v-tippy="{ content: user.is_block == 1 ? 'Block' : 'UnBlock' }" class="blockUser"
+                                @click="changeIsBlock(user)">
+                                <i
+                                    :class="{ 'fa-solid': true, 'fa-lock': user.is_block == 0, 'fa-lock-open': user.is_block == 1, 'sizeiconlock': true }"></i>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -100,11 +108,13 @@
             </paginate>
         </div>
         <AddUser></AddUser>
+        <BlockUser :userSelected="userSelected"></BlockUser>
     </div>
 </template>
 
 <script>
 
+import BlockUser from '@/components/admin/admin-dashboard/manage-user/BlockUser.vue';
 import AddUser from '@/components/admin/admin-dashboard/manage-user/AddUser.vue';
 import useEventBus from '@/composables/useEventBus'
 import AdminRequest from '@/restful/AdminRequest';
@@ -124,6 +134,7 @@ export default {
         paginate: Paginate,
         TableLoading,
         AddUser,
+        BlockUser,
     },
     data() {
         return {
@@ -251,6 +262,9 @@ export default {
             const checkbox = this.$refs.selectAllCheckbox;
             if (checkbox.checked) this.selectedUsers = this.users.map(user => user.id);
             else this.selectedUsers = [];
+        },
+        changeIsBlock: async function (user) {
+            this.userSelected = user;
         },
        
     },
