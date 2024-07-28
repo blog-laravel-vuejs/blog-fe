@@ -2,95 +2,38 @@
     <div class="account_setting">
         <form class="col-12" @submit.prevent="updateProfile">
             <div class="row">
-                <div class="colorTitle"><i class="fa-solid fa-pen-to-square"></i> Account Setting</div>
+                <div class="colorTitle"><i class="fa-solid fa-pen-to-square"></i>Admin Account Setting</div>
             </div>
             <div class="contact-info">
+                <div class="col-1"></div>
                 <div class="col-5">
-                    <div class="row colorTitle bigTitle"><span><i class="fa-solid fa-mobile-screen-button"></i> CONTACT
+                    <div class="row colorTitle bigTitle"><span><i class="fa-solid fa-mobile-screen-button"></i>
+                            CONTACT
                             INFORMATION</span></div>
                     <div class="row mt-3">
                         <div class="col-12">
                             <label><i class="fa-solid fa-signature"></i> Full Name</label><input required
-                                v-model="user.name" placeholder="Full Name" type="text" class="form-control">
+                                v-model="admin.name" placeholder="Full Name" type="text" class="form-control">
                             <span v-if="errors.name" class="text-danger">{{ errors.name[0] }}</span>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-12">
-                            <label><i class="fa-solid fa-cake-candles"></i> Date of birth</label><input
-                                v-model="user.date_of_birth" type="date" required format="YYYY MM DD"
-                                class="form-control">
-                            <span v-if="errors.date_of_birth" class="text-danger">{{ errors.date_of_birth[0] }}</span>
-
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <label><i class="fa-solid fa-location-dot"></i> Address</label><input v-model="user.address"
-                                placeholder="Address" type="text" required class="form-control">
-                            <span v-if="errors.address" class="text-danger">{{ errors.address[0] }}</span>
-
-
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <label><i class="fa-solid fa-venus-mars"></i> Gender</label>
-                            <div class="groupCheckbox">
-                                <div class="form-check form-check-inline">
-                                    <input required v-model="user.gender" class="form-check-input" type="radio"
-                                        name="inlineRadioOptions" id="male" value="1">
-                                    <label style="color: #0085FF;" class="form-check-label"
-                                        for="inlineRadio1">Men</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input required v-model="user.gender" class="form-check-input" type="radio"
-                                        name="inlineRadioOptions" id="female" value="0">
-                                    <label style="color: #0085FF;" class="form-check-label"
-                                        for="inlineRadio2">Women</label>
-                                </div>
-                            </div>
-                            <span v-if="errors.gender" class="text-danger">{{ errors.gender[0] }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-5">
-                    <div class="row colorTitle bigTitle"><span><i class="fa-solid fa-mobile-screen-button"></i> CONTACT
-                            INFORMATION</span></div>
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <label for="formGroupExampleInput"><i class="fa-solid fa-phone"></i> Phone</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">+84</div>
-                                </div>
-                                <input type="text" required v-model="user.phone" class="form-control"
-                                    placeholder="Number Phone">
-                            </div>
-                            <span v-if="errors.phone" class="text-danger">{{ errors.phone[0] }}</span>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <label><i class="fa-solid fa-envelope"></i> Email</label><input v-model="user.email"
+                            <label><i class="fa-solid fa-envelope"></i> Email</label><input v-model="admin.email"
                                 placeholder="Email" disabled type="email" class="form-control">
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-12">
-                            <label><i class="fa-brands fa-line"></i> LINE User ID</label>
-                            <input class="form-control" disabled v-model="user.line_user_id" placeholder="Username"
-                                type="text">
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-12">
                             <label><i class="fa-solid fa-user-check"></i> Role</label>
-                            <input class="form-control" disabled v-model="user.role" placeholder="Role" type="text">
+                            <input class="form-control" disabled v-model="admin.role" placeholder="Role" type="text">
                         </div>
                     </div>
                 </div>
-                <div class="col-2">
+                <div class="col-1"></div>
+                <div class="col-5">
+                    <!-- <div class="row colorTitle bigTitle"><span><i class="fa-solid fa-mobile-screen-button"></i> CONTACT
+                            INFORMATION</span></div> -->
                     <div class="avatarUser">
                         <div class="innerAvatar">
                             <label><i class="fa-solid fa-wand-magic-sparkles"></i> Avatar</label>
@@ -107,50 +50,39 @@
                         </div>
                     </div>
                 </div>
+
             </div>
             <div>
+                <br><br>
                 <button type="submit" class="mt-4 btn-pers" id="login_button"><i class="fa-solid fa-floppy-disk"></i>
                     Save</button>
             </div>
         </form>
         <br>
         <hr>
-        <div class="col-12 mt-3">
-            <div class="row">
-                <div class="colorTitle"><i class="fa-solid fa-key"></i> Change Password</div>
-            </div>
-            <div class="row">
-                <ChangePassword></ChangePassword>
-            </div>
-        </div>
+
         <br>
     </div>
 </template>
 
 <script>
-import UserRequest from '@/restful/UserRequest';
+import AdminRequest from '@/restful/AdminRequest';
 import useEventBus from '@/composables/useEventBus'
-import ChangePassword from '@/components/user/account-setting/ChangePassword'
+
 const { emitEvent } = useEventBus();
 
+
 export default {
-    name: "AccountSetting",
+    name: "AdminAccountSetting",
     data() {
         return {
-            user: {
+            // config:config,
+            admin: {
                 id: null,
                 email: null,
-                role: null,
-                line_user_id: null,
-                channel_id: null,
                 name: null,
-                phone: null,
+                role: 'admin',
                 avatar: null,
-                address: null,
-                gender: null,
-                date_of_birth: null,
-                is_block: null,
-                is_delete: null,
                 email_verified_at: null,
                 created_at: null,
                 updated_at: null,
@@ -170,15 +102,15 @@ export default {
         }
     },
     setup() {
-        document.title = "Account Setting | LINE Bot";
+        document.title = "Account Setting | Blog Admin";
     },
     async mounted() {
-        this.user = JSON.parse(localStorage.getItem('user'));
-        this.previewImageSrc = this.user.avatar;
+        this.admin = JSON.parse(localStorage.getItem('admin'));
+        this.previewImageSrc =this.admin.avatar;
         emitEvent('eventTitleHeader', 'Account Setting');
     },
     components: {
-        ChangePassword,
+        // ChangePassword,
     },
     methods: {
         previewImage(event) {
@@ -187,7 +119,7 @@ export default {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     this.previewImageSrc = e.target.result;
-                    this.user.avatar = file;
+                    this.admin.avatar = file;
                     this.updateImage = true;
                 };
                 reader.readAsDataURL(file);
@@ -195,29 +127,25 @@ export default {
         },
         removeFile: function () {
             this.previewImageSrc = null;
-            this.user.avatar = null;
+            this.admin.avatar = null;
             this.$refs.fileInput.value = '';
             this.updateImage = false;
         },
         updateProfile: async function () { // (1)
             try {
                 const formData = new FormData();
-                var fields = ['name', 'address', 'date_of_birth', 'phone', 'gender'];
-                if (this.updateImage) formData.append('avatar', this.user.avatar);
-                for (var field of fields) formData.append(field, this.user[field]);
-                const { data, messages } = await UserRequest.post('user/update', formData, true);
-                this.user.name = data.name;
-                this.user.address = data.address;
-                this.user.date_of_birth = data.date_of_birth;
-                this.user.phone = data.phone;
-                this.user.gender = data.gender;
-                this.user.avatar = data.avatar;
-                this.previewImageSrc = this.user.avatar;
+                var fields = ['name'];
+                if (this.updateImage) formData.append('avatar', this.admin.avatar);
+                for (var field of fields) formData.append(field, this.admin[field]);
+                const { data, messages } = await AdminRequest.post('admin/update', formData, true);
+                this.admin.name = data.name;
+                this.admin.avatar = data.avatar;
+                this.previewImageSrc = this.admin.avatar;
                 this.updateImage = false;
 
-                localStorage.setItem('user', JSON.stringify(this.user));
+                localStorage.setItem('admin', JSON.stringify(this.admin));
                 emitEvent('eventSuccess', messages[0]);
-                emitEvent('updateProfileUser', JSON.stringify(this.user));
+                emitEvent('updateProfileadmin', JSON.stringify(this.admin));
             } catch (error) {
                 if (error.errors) {
                     this.errors = error.errors;
@@ -402,14 +330,13 @@ export default {
     .input-group-text {
         font-size: 13px !important;
     }
-
     .btn-pers {
         font-size: 11px;
     }
 }
 
 @media screen and (min-width: 577px) and (max-width: 768px) {
-    .contact-info {
+    .contact-info{
         flex-direction: column;
     }
 
@@ -440,7 +367,7 @@ export default {
         max-width: 100% !important;
     }
 
-    .col-2 {
+    .col-2{
         display: flex;
         justify-content: center;
         margin-top: 30px;
@@ -458,7 +385,7 @@ export default {
 }
 
 @media screen and (min-width: 375px) and (max-width: 576px) {
-    .contact-info {
+    .contact-info{
         flex-direction: column;
     }
 
@@ -489,7 +416,7 @@ export default {
         max-width: 100% !important;
     }
 
-    .col-2 {
+    .col-2{
         display: flex;
         justify-content: center;
         margin-top: 25px;
@@ -501,7 +428,7 @@ export default {
         font-size: 12px !important;
     }
 
-    .btn-pers {
+    .btn-pers{
         font-size: 11px;
     }
 }

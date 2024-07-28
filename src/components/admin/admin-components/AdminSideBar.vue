@@ -12,8 +12,15 @@
         <ul class="nav-list" style="overflow: visible;">
           <span>
             <li>
-              <router-link class="links" data-path="manage-manager" :to="{ name: 'ManageManager' }"><i
-                  class="fa-solid fa-user-gear"></i><span class="links_name">Manager Account</span></router-link>
+              <router-link class="links" data-path="admin-account-setting" :to="{ name: 'AdminAccountSetting' }"><i
+                  class="fa-solid fa-user-gear"></i><span class="links_name">Account
+                  setting</span></router-link>
+            </li>
+          </span>
+          <span>
+            <li>
+              <router-link class="links" data-path="manage-user" :to="{ name: 'ManageUser' }"><i
+                  class="fa-solid fa-user-gear"></i><span class="links_name">Manager User</span></router-link>
             </li>
           </span>
         </ul>
@@ -23,7 +30,7 @@
           <img id="avatar_sidebar" :src="admin.avatar ? admin.avatar : require('@/assets/avatar-admin.jpg')"
             alt="Avatar Admin">
           <div class="name_job">
-            <div class="name">Admin LINE OA</div>
+            <div class="name">Admin Blog</div>
             <div class="job"><i class="fa-solid fa-user-shield"></i> admin</div>
           </div>
         </div>

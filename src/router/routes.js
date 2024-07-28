@@ -6,7 +6,7 @@ import NProgress from "nprogress";
 // admin
 import AdminMain from "@/components/admin/AdminMain";
 import AdminDashboard from "@/components/admin/admin-dashboard/AdminDashboard";
-import ManageManager from "@/components/admin/admin-dashboard/manage-manager/ManageManager";
+import ManageUser from "@/components/admin/admin-dashboard/manage-user/ManageUser.vue";
 import AdminLogin from "@/components/admin/auth/AdminLogin";
 
 // user
@@ -15,11 +15,13 @@ import UserMain from "@/components/user/UserMain";
 import AccountSetting from "@/components/user/account-setting/AccountSetting";
 import UserResetPassword from "@/components/user/auth/UserResetPassword";
 import UserLogin from "@/components/user/auth/UserLogin";
+import AdminAccountSetting from "@/components/admin/account-setting/AdminAccountSetting";
 
 
 
 //Other
 import CommonNotFound from '@/components/common/CommonNotFound'
+
 // middleware authUser
 const authUser = (to, from, next) =>{
     const user = localStorage.getItem('user');
@@ -48,7 +50,7 @@ const loggedUser = (to, from, next) => {
 // check amdin logged 
 const loggedAdmin = (to, from, next) => {
     const admin = localStorage.getItem('admin');
-    if (admin) next({ name: 'ManageManager' });
+    if (admin) next({ name: "AdminAccountSetting" });
     else next();
 };
 
@@ -103,9 +105,14 @@ const routes = [
         beforeEnter: authAdmin,
         children: [
           {
-            path: "manage-manager",
-            name: "ManageManager",
-            component: ManageManager,
+            path: "admin-account-setting",
+            name: "AdminAccountSetting",
+            component: AdminAccountSetting,
+          },
+          {
+            path: "manage-user",
+            name: "ManageUser",
+            component: ManageUser,
           },
         ],
       },

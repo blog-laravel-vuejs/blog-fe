@@ -86,7 +86,8 @@ export default {
 					data.messages.forEach(message => {
 						emitEvent('eventSuccess', message);
 					});
-					this.$router.push({ name: 'ManageManager' });
+					// this.$router.push({ name: 'ManageManager' });
+					this.$router.push({ name: 'AdminAccountSetting' });
 				})
 				.catch(error => {
 					if (error.errors) this.errors = error.errors;
