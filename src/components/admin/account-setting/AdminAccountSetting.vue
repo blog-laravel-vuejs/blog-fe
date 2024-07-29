@@ -60,7 +60,14 @@
         </form>
         <br>
         <hr>
-
+        <div class="col-12 mt-3">
+            <div class="row">
+                <div class="colorTitle"><i class="fa-solid fa-key"></i> Change Password</div>
+            </div>
+            <div class="row">
+                <AdminChangePassword></AdminChangePassword>
+            </div>
+        </div>
         <br>
     </div>
 </template>
@@ -68,7 +75,7 @@
 <script>
 import AdminRequest from '@/restful/AdminRequest';
 import useEventBus from '@/composables/useEventBus'
-
+import AdminChangePassword from '@/components/admin/account-setting/AdminChangePassword'
 const { emitEvent } = useEventBus();
 
 
@@ -110,7 +117,7 @@ export default {
         emitEvent('eventTitleHeader', 'Account Setting');
     },
     components: {
-        // ChangePassword,
+        AdminChangePassword,
     },
     methods: {
         previewImage(event) {
