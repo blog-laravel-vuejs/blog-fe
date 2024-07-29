@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="modal fade" id="blockUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="blockManyUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -13,23 +13,29 @@
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-warning" role="alert">
-                            <p>Warning: These people will be moved to <strong>{{ userSelected.is_block == 0 ?
-                                'Locked' :
-                                    'Normal' }}</strong> status in the system !</p>
-                            <p>Name : <strong>{{ userSelected.name }}</strong> </p>
-                            <p>Email : <strong>{{ userSelected.email }}</strong> </p>
-                            <p>Username : <strong>{{ userSelected.username }}</strong></p>
+                            <p>Warning: These people will be moved to <strong>{{ isBlockChangeMany == 0 ? 'Locked' :
+                                    'Normal'
+                                    }}</strong> status in the system !</p>
+                            <div v-for="(user, index) in users" :key="index">
+                                <li class="mb-2" v-if="selectedUsers.includes(user.id)">
+                                    <p>{{ index + 1 }}. Name : <strong>{{ user.name }}</strong></p>
+                                    <div class="pl-6">
+                                        <p>Email : <strong>{{ user.email }}</strong></p>
+                                        <p>Username : <strong>{{ user.username }}</strong></p>
+                                    </div>
+                                </li>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" ref="closeButton"
                             id="close">Close</button>
                         <button type="button"
-                            :class="{ 'btn': true, 'btn-outline-danger': userSelected.is_block == 0, 'btn-outline-success': userSelected.is_block == 1 }"
-                            @click="deleteBook">
+                            :class="{ 'btn': true, 'btn-outline-danger': isBlockChangeMany == 0, 'btn-outline-success': isBlockChangeMany == 1 }"
+                            @click="changeIsBlockMany">
                             <i
-                                :class="{ 'fa-solid': true, 'fa-lock': userSelected.is_block == 0, 'fa-lock-open': userSelected.is_block == 1 }"></i>
-                            {{ userSelected.is_block == 1 ? 'Block' : 'UnBlock' }}
+                                :class="{ 'fa-solid': true, 'fa-lock': isBlockChangeMany == 0, 'fa-lock-open': isBlockChangeMany == 1 }"></i>
+                            {{ isBlockChangeMany == 0 ? 'Block' : 'UnLock' }}
                         </button>
                     </div>
                 </div>
@@ -41,35 +47,33 @@
 
 import AdminRequest from '@/restful/AdminRequest';
 import useEventBus from '@/composables/useEventBus';
+
 const { emitEvent } = useEventBus();
 
 export default {
-    name: "LockUser",
+    name: "BlockManyUser",
     props: {
-        userSelected: Object
+        selectedUsers: Array,
+        users: Object,
+        isBlockChangeMany: Number
     },
-    data() {
-        return {
-            dataSubmit: {
-                is_block: '',
-            }
-        }
+    components: {
     },
     methods: {
-        deleteBook: async function () {
+        changeIsBlockMany: async function () {
+            const selectedUsersArray = Object.values(this.selectedUsers);
+            var data = {
+                ids_user: selectedUsersArray,
+                is_block: this.isBlockChangeMany
+            }
             try {
-                if (this.userSelected.is_block == 1) this.dataSubmit.is_block = 0;
-                else this.dataSubmit.is_block = 1;
-
-                const { messages } = await AdminRequest.post('admin/block-user/' + this.userSelected.id, this.dataSubmit, true);
+                const { messages } = await AdminRequest.post('admin/block-many-user', data, true);
                 emitEvent('eventSuccess', messages[0]);
+                emitEvent('eventRegetUsers', '');
                 const closeButton = this.$refs.closeButton;
                 closeButton.click();
-                emitEvent('eventUpdateIsBlock', this.userSelected.id); // gán lại giá trị is block  
             }
             catch (error) {
-                if (error.errors) this.errors = error.errors;
-                else for (let key in this.errors) this.errors[key] = null;
                 if (error.messages) emitEvent('eventError', error.messages[0]);
             }
         },
@@ -80,6 +84,10 @@ export default {
 <style scoped>
 .modal-header .close {
     outline: none;
+}
+
+.modal-dialog {
+    max-width: 650px;
 }
 
 @media screen and (min-width: 993px) and (max-width: 1200px) {
@@ -130,7 +138,7 @@ export default {
 
 @media screen and (min-width: 577px) and (max-width: 768px) {
     .modal-dialog {
-        max-width: 230px;
+        max-width: 310px;
         margin: 10px auto;
         font-size: 9px;
         ;
@@ -155,7 +163,7 @@ export default {
 
 @media screen and (min-width: 425px) and (max-width: 575px) {
     .modal-dialog {
-        max-width: 180px;
+        max-width: 220px;
         margin: 10px auto;
         font-size: 7px;
         ;
@@ -181,7 +189,7 @@ export default {
 
 @media screen and (min-width: 375px) and (max-width: 424px) {
     .modal-dialog {
-        max-width: 180px;
+        max-width: 210px;
         margin: 10px auto;
         font-size: 7px;
         ;

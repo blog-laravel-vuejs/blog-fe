@@ -15,7 +15,7 @@
                     <option value="name">Name</option>
                     <option value="address">Address</option>
                     <option value="gender">Gender</option>
-                    <option value="gender">Username</option>
+                    <option value="username">Username</option>
                 </select>
             </div>
             <div class="col-2 pl-0">
@@ -46,6 +46,16 @@
                         class="btn btn-success"><i class="fa-solid fa-plus"></i></button>
                 </div>
             </div>
+            <div class="pr-0" v-if="selectedUsers.length > 0">
+                <div class="input-group">
+                    <button @click="changeBlockManyUser(0)" content="Block Many User" v-tippy data-toggle="modal"
+                        data-target="#blockManyUser" type="button" class="btn btn-outline-danger mr-1"><i
+                            class="fa-solid fa-lock"></i></button>
+                    <button @click="changeBlockManyUser(1)" content="UnBlock Many User" v-tippy data-toggle="modal"
+                        data-target="#blockManyUser" type="button" class="btn btn-outline-success"><i
+                            class="fa-solid fa-lock-open"></i></button>
+                </div>
+            </div>
         </div>
         <div v-if="isLoading">
             <TableLoading :cols="8" :rows="9"></TableLoading>
@@ -54,6 +64,8 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th scope="col"><input ref="selectAllCheckbox" @change="selectAll()" type="checkbox" class="">
+                        </th>
                         <th scope="col">#</th>
                         <th scope="col"><i class="fa-solid fa-signature"></i> Full Name</th>
                         <th scope="col"><i class="fa-solid fa-envelope"></i> Email</th>
@@ -68,6 +80,8 @@
                 </thead>
                 <tbody>
                     <tr v-for="(user, index) in users" :key="index">
+                        <th class="table-cell checkbox  " scope="row"><input :checked="isSelected(user.id)"
+                                type="checkbox" class="" @change="handleSelect(user.id)"></th>
                         <th class="table-cell  " scope="row">#{{ (big_search.page - 1) * big_search.perPage + index + 1
                             }}
                         </th>
@@ -90,7 +104,7 @@
                         <td class="table-cell text-center displayTime  ">{{ formatDate(user.created_at) }}</td>
                         <td class="table-cell text-center">{{ formatDate(user.updated_at) }}</td>
                         <td class="table-cell text-center">
-                            <button data-toggle="modal" data-target="#lockUser"
+                            <button data-toggle="modal" data-target="#blockUser"
                                 v-tippy="{ content: user.is_block == 1 ? 'Block' : 'UnBlock' }" class="blockUser"
                                 @click="changeIsBlock(user)">
                                 <i
@@ -109,6 +123,7 @@
         </div>
         <AddUser></AddUser>
         <BlockUser :userSelected="userSelected"></BlockUser>
+        <BlockManyUser :selectedUsers="selectedUsers" :users="users" :isBlockChangeMany="isBlockChangeMany"></BlockManyUser>
     </div>
 </template>
 
@@ -123,6 +138,7 @@ import config from '@/config';
 import TableLoading from '@/components/common/TableLoading'
 const { emitEvent,onEvent } = useEventBus();
 import _ from 'lodash';
+import BlockManyUser from '@/components/admin/admin-dashboard/manage-user/BlockManyUser.vue';
 
 
 export default {
@@ -135,6 +151,7 @@ export default {
         TableLoading,
         AddUser,
         BlockUser,
+        BlockManyUser,
     },
     data() {
         return {
@@ -161,7 +178,7 @@ export default {
             },
             selectedUsers: [],
             isLoading: false,
-           
+            isBlockChangeMany:1,
             
         }
     },
@@ -266,6 +283,9 @@ export default {
         changeIsBlock: async function (user) {
             this.userSelected = user;
         },
+        changeBlockManyUser: function (is_block) {
+            this.isBlockChangeMany = is_block;
+        }
        
     },
     watch: {
