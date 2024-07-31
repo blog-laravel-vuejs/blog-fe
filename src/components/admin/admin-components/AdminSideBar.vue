@@ -13,7 +13,7 @@
           <span>
             <li>
               <router-link class="links" data-path="admin-account-setting" :to="{ name: 'AdminAccountSetting' }"><i
-                  class="fa-solid fa-user-gear"></i><span class="links_name">Account
+                  class="fa-solid fa-user"></i><span class="links_name">Account
                   setting</span></router-link>
             </li>
           </span>
@@ -21,6 +21,12 @@
             <li>
               <router-link class="links" data-path="manage-user" :to="{ name: 'ManageUser' }"><i
                   class="fa-solid fa-user-gear"></i><span class="links_name">Manager User</span></router-link>
+            </li>
+          </span>
+          <span v-if="admin.role === 'manager'">
+            <li>
+              <router-link class="links" data-path="manage-admin" :to="{ name: 'ManageMember' }"><i
+                  class="fa-solid fa-user-gear"></i><span class="links_name">Manager Admin</span></router-link>
             </li>
           </span>
         </ul>
@@ -61,6 +67,8 @@ export default {
       admin: {
         id: null,
         email: null,
+        name: null,
+        role:null,
         created_at: null,
         updated_at: null,
         access_token: null,

@@ -9,6 +9,7 @@ import AdminDashboard from "@/components/admin/admin-dashboard/AdminDashboard";
 import ManageUser from "@/components/admin/admin-dashboard/manage-user/ManageUser.vue";
 import AdminLogin from "@/components/admin/auth/AdminLogin";
 
+import ManageMember from "@/components/admin/admin-dashboard/manage-admin/ManageMember.vue";
 // user
 import UserRegister from "@/components/user/auth/UserRegister";
 import UserMain from "@/components/user/UserMain";
@@ -16,6 +17,7 @@ import AccountSetting from "@/components/user/account-setting/AccountSetting";
 import UserResetPassword from "@/components/user/auth/UserResetPassword";
 import UserLogin from "@/components/user/auth/UserLogin";
 import AdminAccountSetting from "@/components/admin/account-setting/AdminAccountSetting";
+
 
 
 
@@ -47,7 +49,7 @@ const loggedUser = (to, from, next) => {
     else next();
 };
 
-// check amdin logged 
+// check admin logged 
 const loggedAdmin = (to, from, next) => {
     const admin = localStorage.getItem('admin');
     if (admin) next({ name: "AdminAccountSetting" });
@@ -113,6 +115,11 @@ const routes = [
             path: "manage-user",
             name: "ManageUser",
             component: ManageUser,
+          },
+          {
+            path: "manage-admin",
+            name: "ManageMember",
+            component: ManageMember,
           },
         ],
       },
