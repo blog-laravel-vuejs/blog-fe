@@ -78,9 +78,15 @@
                         <td class="table-cell text-center">{{ formatDate(member.updated_at) }}</td>
                         <td class="table-cell text-center">
                             <div class="action">
-                                <button data-toggle="modal" data-target="#changeRole" v-tippy="{ content: 'Change role' }"
-                                    class="updateMember text-primary" @click="selectMember(member)">
+                                <button data-toggle="modal" data-target="#changeRole"
+                                    v-tippy="{ content: 'Change role' }" class="updateMember text-primary"
+                                    @click="selectMember(member)">
                                     <i :class="{ 'fa-solid': true, 'fa-pen': true }"></i>
+                                </button>
+                                <button content="Delete member" v-tippy @click="selectMember(member)"
+                                    type="button" class="btn btn-outline-danger" data-toggle="modal"
+                                    data-target="#deleteMember">
+                                    <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
                         </td>
@@ -95,7 +101,8 @@
             </paginate>
         </div>
         <AddMember></AddMember>
-        <ChangeRole ></ChangeRole>
+        <ChangeRole></ChangeRole>
+        <DeleteMember></DeleteMember>
     </div>
 </template>
 
@@ -109,7 +116,7 @@ const { emitEvent, onEvent} = useEventBus();
 import _ from 'lodash';
 import AddMember from '@/components/admin/admin-dashboard/manage-admin/AddMember.vue';
 import ChangeRole from '@/components/admin/admin-dashboard/manage-admin/ChangeRole.vue';
-
+import DeleteMember from '@/components/admin/admin-dashboard/manage-admin/DeleteMember.vue';
 
 
 export default {
@@ -121,7 +128,8 @@ export default {
         paginate: Paginate,
         TableLoading,
         AddMember,
-        ChangeRole
+        ChangeRole,
+        DeleteMember,
         
     },
     data() {
