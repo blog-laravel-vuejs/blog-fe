@@ -170,7 +170,7 @@ export default {
         }
     },
     setup() {
-        document.title = "Account Setting | LINE Bot";
+        document.title = "Account Setting | Blog";
     },
     async mounted() {
         this.user = JSON.parse(localStorage.getItem('user'));

@@ -37,7 +37,7 @@
             alt="Avatar Admin">
           <div class="name_job">
             <div class="name">Admin Blog</div>
-            <div class="job"><i class="fa-solid fa-user-shield"></i> admin</div>
+            <div class="job"><i class="fa-solid fa-user-shield"></i>{{admin.role}}</div>
           </div>
         </div>
         <i class="bx bx-log-out" id="log_out" @click="logout"></i>

@@ -69,14 +69,21 @@
                         <td class="table-cell name">
                             <div class="nameAvatar">
                                 <img :src="member.avatar ? member.avatar : require('@/assets/avatar.jpg')" alt="">
-                                <span class="nameMember">{{ member.name }}</span>
+                                <span class="nameMember text-center">{{ member.name }}</span>
                             </div>
                         </td>
-                        <td class="table-cell displaytext break">{{ member.email }}</td>
-                        <td class="table-cell displaytext break">{{ member.role }}</td>
+                        <td class="table-cell text-center displaytext break">{{ member.email }}</td>
+                        <td class="table-cell text-center displaytext break">{{ member.role }}</td>
                         <td class="table-cell text-center displayTime  ">{{ formatDate(member.created_at) }}</td>
                         <td class="table-cell text-center">{{ formatDate(member.updated_at) }}</td>
-                        
+                        <td class="table-cell text-center">
+                            <div class="action">
+                                <button data-toggle="modal" data-target="#changeRole" v-tippy="{ content: 'Change role' }"
+                                    class="updateMember text-primary" @click="selectMember(member)">
+                                    <i :class="{ 'fa-solid': true, 'fa-pen': true }"></i>
+                                </button>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -88,6 +95,7 @@
             </paginate>
         </div>
         <AddMember></AddMember>
+        <ChangeRole ></ChangeRole>
     </div>
 </template>
 
@@ -97,10 +105,10 @@ import useEventBus from '@/composables/useEventBus'
 import AdminRequest from '@/restful/AdminRequest';
 import Paginate from 'vuejs-paginate-next';
 import TableLoading from '@/components/common/TableLoading'
-const { emitEvent} = useEventBus();
+const { emitEvent, onEvent} = useEventBus();
 import _ from 'lodash';
 import AddMember from '@/components/admin/admin-dashboard/manage-admin/AddMember.vue';
-
+import ChangeRole from '@/components/admin/admin-dashboard/manage-admin/ChangeRole.vue';
 
 
 
@@ -113,6 +121,7 @@ export default {
         paginate: Paginate,
         TableLoading,
         AddMember,
+        ChangeRole
         
     },
     data() {
@@ -153,6 +162,9 @@ export default {
             role: searchParams.get('role') || 'all',
         }
         this.getMembers();
+        onEvent('eventRegetMembers', () => {
+            this.getMembers();
+        });
     },
     methods: {
         reRenderPaginate: function () {
@@ -203,7 +215,9 @@ export default {
             this.getMembers();
         },
         selectMember: function (memberSelected) {
-            this.memberSelected = memberSelected;
+            console.log(memberSelected);
+            // this.memberSelected = memberSelected;
+            emitEvent('eventSelectMember', memberSelected);
         },
         isSelected(memberId) {
             return this.selectedMembers.includes(memberId);

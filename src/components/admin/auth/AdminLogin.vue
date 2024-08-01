@@ -59,7 +59,7 @@ export default {
 			isShow: false,
 			loginAdmin: {
 				email: 'kimtientran0410@gmail.com',
-				password: 'kimtientran0410'
+				password: '123456'
 			},
 			resetPassword: {
 				email: ''
