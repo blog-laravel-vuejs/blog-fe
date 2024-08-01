@@ -44,6 +44,13 @@
                         type="button" class="btn btn-success"><i class="fa-solid fa-plus"></i></button>
                 </div>
             </div>
+            <div class="pr-0" v-if="selectedMembers.length > 0">
+                <div class="input-group">
+                    <button content="Delete Many Member" v-tippy data-toggle="modal"
+                        data-target="#deleteManyMember" type="button" class="btn btn-outline-danger mr-1"><i
+                            class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
         </div>
         <div v-if="isLoading">
             <TableLoading :cols="8" :rows="9"></TableLoading>
@@ -52,6 +59,8 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th scope="col"><input ref="selectAllCheckbox" @change="selectAll()" type="checkbox" class="">
+                        </th>
                         <th scope="col">#</th>
                         <th scope="col"><i class="fa-solid fa-signature"></i> Full Name</th>
                         <th scope="col"><i class="fa-solid fa-envelope"></i> Email</th>
@@ -63,6 +72,8 @@
                 </thead>
                 <tbody>
                     <tr v-for="(member, index) in members" :key="index">
+                        <th class="table-cell" scope="row"><input :checked="isSelected(member.id)" type="checkbox"
+                                class="" @change="handleSelect(member.id)"></th>
                         <th class="table-cell  " scope="row">#{{ (big_search.page - 1) * big_search.perPage + index + 1
                             }}
                         </th>
@@ -83,9 +94,8 @@
                                     @click="selectMember(member)">
                                     <i :class="{ 'fa-solid': true, 'fa-pen': true }"></i>
                                 </button>
-                                <button content="Delete member" v-tippy @click="selectMember(member)"
-                                    type="button" class="btn btn-outline-danger" data-toggle="modal"
-                                    data-target="#deleteMember">
+                                <button content="Delete member" v-tippy @click="selectMember(member)" type="button"
+                                    class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteMember">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
@@ -103,6 +113,8 @@
         <AddMember></AddMember>
         <ChangeRole></ChangeRole>
         <DeleteMember></DeleteMember>
+        <DeleteManyMember :isDeleteChangeMany="isDeleteChangeMany" :selectedMembers="selectedMembers"
+            :members="members"></DeleteManyMember>
     </div>
 </template>
 
@@ -117,7 +129,7 @@ import _ from 'lodash';
 import AddMember from '@/components/admin/admin-dashboard/manage-admin/AddMember.vue';
 import ChangeRole from '@/components/admin/admin-dashboard/manage-admin/ChangeRole.vue';
 import DeleteMember from '@/components/admin/admin-dashboard/manage-admin/DeleteMember.vue';
-
+import DeleteManyMember from '@/components/admin/admin-dashboard/manage-admin/DeleteManyMember.vue';
 
 export default {
     name: "ManageMember",
@@ -130,6 +142,7 @@ export default {
         AddMember,
         ChangeRole,
         DeleteMember,
+        DeleteManyMember,
         
     },
     data() {
@@ -234,6 +247,11 @@ export default {
             const index = this.selectedMembers.indexOf(memberId);
             if (index === -1) this.selectedMembers.push(memberId);
             else this.selectedMembers.splice(index, 1);
+        },
+        selectAll: function () {
+            const checkbox = this.$refs.selectAllCheckbox;
+            if (checkbox.checked) this.selectedMembers = this.members.map(member => member.id);
+            else this.selectedMembers = [];
         },
     },
     watch: {
