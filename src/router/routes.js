@@ -10,6 +10,8 @@ import ManageUser from "@/components/admin/admin-dashboard/manage-user/ManageUse
 import AdminLogin from "@/components/admin/auth/AdminLogin";
 
 import ManageMember from "@/components/admin/admin-dashboard/manage-admin/ManageMember.vue";
+import ManageCategory from "@/components/admin/admin-dashboard/manage-category/ManageCategory.vue";
+
 // user
 import UserRegister from "@/components/user/auth/UserRegister";
 import UserMain from "@/components/user/UserMain";
@@ -120,6 +122,11 @@ const routes = [
             path: "manage-admin",
             name: "ManageMember",
             component: ManageMember,
+          },
+          {
+            path: "manage-category",
+            name: "ManageCategory",
+            component: ManageCategory,
           },
         ],
       },

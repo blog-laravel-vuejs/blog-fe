@@ -26,7 +26,13 @@
           <span v-if="admin.role === 'manager'">
             <li>
               <router-link class="links" data-path="manage-admin" :to="{ name: 'ManageMember' }"><i
-                  class="fa-solid fa-user-gear"></i><span class="links_name">Manager Admin</span></router-link>
+                  class="fa-solid fa-user-tie"></i><span class="links_name">Manager Admin</span></router-link>
+            </li>
+          </span>
+          <span>
+            <li>
+              <router-link class="links" data-path="manage-category" :to="{ name: 'ManageCategory' }"><i
+                  class="fa-solid fa-list"></i><span class="links_name">Manager Category</span></router-link>
             </li>
           </span>
         </ul>
