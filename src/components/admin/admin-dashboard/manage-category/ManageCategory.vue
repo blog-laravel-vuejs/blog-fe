@@ -60,7 +60,8 @@
                         </th>
                         <td class="table-cell name">
                             <div class="nameAvatar">
-                                <img :src="category.thumbnail ? category.thumbnail : require('@/assets/avatar.jpg')" alt="">
+                                <img :src="category.thumbnail ? category.thumbnail : require('@/assets/avatar.jpg')"
+                                    alt="">
                                 <span class="nameMember text-center">{{ category.name }}</span>
                             </div>
                         </td>
@@ -70,7 +71,11 @@
                         <td class="table-cell text-center">{{ formatDate(category.updated_at) }}</td>
                         <td class="table-cell text-center">
                             <div class="action">
-                                
+                                <button content="Update Category" v-tippy @click="selectCategory(category)"
+                                    type="button" class="btn btn-outline-primary mr-5" data-toggle="modal"
+                                    data-target="#updateCategory">
+                                    <i class="fa-solid fa-pen-nib"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -84,7 +89,7 @@
             </paginate>
         </div>
         <AddCategory></AddCategory>
-
+        <UpdateCategory></UpdateCategory>
     </div>
 </template>
 
@@ -98,7 +103,7 @@ import _ from 'lodash';
 const { emitEvent, onEvent } = useEventBus();
 
 import AddCategory from '@/components/admin/admin-dashboard/manage-category/AddCategory.vue';
-
+import UpdateCategory from '@/components/admin/admin-dashboard/manage-category/UpdateCategory.vue';
 
 
 export default {
@@ -110,6 +115,7 @@ export default {
         paginate: Paginate,
         TableLoading,
         AddCategory,
+        UpdateCategory,
     },
     data() {
         return {
@@ -201,19 +207,22 @@ export default {
             this.page = 1;
             this.getCategories();
         },
-        
-    },
-    watch: {
-        big_search: {
-            handler: function () {
-                this.getCategories();
-            },
-            deep: true
+        selectCategory: function (category) {
+            emitEvent('eventSelectCategory', category);
         },
-        search: _.debounce(function () {
-            this.getCategories();
-        }, 500),
-    }
+        },
+        watch: {
+            big_search: {
+                handler: function () {
+                    this.getCategories();
+                },
+                deep: true
+            },
+            search: _.debounce(function () {
+                this.getCategories();
+            }, 500),
+        }
+    
 }
 </script>
 <style scoped>
