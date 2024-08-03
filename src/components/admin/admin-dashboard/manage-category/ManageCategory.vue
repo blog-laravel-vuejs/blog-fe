@@ -1,10 +1,87 @@
 <template>
     <div id="main">
-        <div class="pr-1">
-            <div class="input-group ">
-                <button content="Add Category" v-tippy data-toggle="modal" data-target="#addCategory" type="button"
-                    class="btn btn-success"><i class="fa-solid fa-plus"></i></button>
+        <div class="row m-0 pb-2 d-flex justify-content-end" id="search-sort">
+            <div class="col-1 pl-0" id="page">
+                <select content="Pagination" v-tippy class="form-control" v-model="big_search.perPage">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                </select>
             </div>
+            <div class="col-2 pl-0">
+                <select content="Sort by" v-tippy class="form-control" v-model="big_search.typesort">
+                    <option value="new">New</option>
+                    <option value="name">Name</option>
+                </select>
+            </div>
+            <div class="col-2 pl-0">
+                <select content="In direction" v-tippy class="form-control" v-model="big_search.sortlatest">
+                    <option value="false">Ascending</option>
+                    <option value="true">Decrease</option>
+                </select>
+            </div>
+            <div class="col-3 pl-0">
+                <div content="Search information category" v-tippy class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    </div>
+                    <input v-model="search" type="text" class="form-control " id="inlineFormInputGroup"
+                        placeholder="Search...">
+                </div>
+            </div>
+            <div class="pr-1">
+                <div class="input-group ">
+                    <button content="Add Category" v-tippy data-toggle="modal" data-target="#addCategory" type="button"
+                        class="btn btn-success"><i class="fa-solid fa-plus"></i></button>
+                </div>
+            </div>
+        </div>
+        <div v-if="isLoading">
+            <TableLoading :cols="8" :rows="9"></TableLoading>
+        </div>
+        <div v-if="!isLoading" class="tableData">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col"><i class="fa-solid fa-signature"></i>Name category</th>
+                        <th scope="col"><i class="fa-solid fa-envelope"></i> Description category</th>
+                        <th scope="col"><i class="fa-brands fa-line"></i>Search number</th>
+                        <th scope="col">Created at</th>
+                        <th scope="col">Updated at</th>
+                        <th scope="col"><i class="fa-solid fa-user-lock"></i> Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(category, index) in categories" :key="index">
+                        <th class="table-cell  " scope="row">#{{ (big_search.page - 1) * big_search.perPage + index + 1
+                            }}
+                        </th>
+                        <td class="table-cell name">
+                            <div class="nameAvatar">
+                                <img :src="category.thumbnail ? category.thumbnail : require('@/assets/avatar.jpg')" alt="">
+                                <span class="nameMember text-center">{{ category.name }}</span>
+                            </div>
+                        </td>
+                        <td class="table-cell text-center displaytext break">{{ category.description_category }}</td>
+                        <td class="table-cell text-center displaytext break">{{ category.search_number }}</td>
+                        <td class="table-cell text-center displayTime  ">{{ formatDate(category.created_at) }}</td>
+                        <td class="table-cell text-center">{{ formatDate(category.updated_at) }}</td>
+                        <td class="table-cell text-center">
+                            <div class="action">
+                                
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="divpaginate" class="mt-2">
+            <paginate v-if="paginateVisible" :page-count="last_page" :page-range="3" :margin-pages="2"
+                :click-handler="clickCallback" :initial-page="big_search.page" :prev-text="'Prev'" :next-text="'Next'"
+                :container-class="'pagination'" :page-class="'page-item'">
+            </paginate>
         </div>
         <AddCategory></AddCategory>
 
@@ -14,8 +91,13 @@
 <script>
 
 import useEventBus from '@/composables/useEventBus';
+import AdminRequest from '@/restful/AdminRequest';
+import Paginate from 'vuejs-paginate-next';
+import TableLoading from '@/components/common/TableLoading'
+import _ from 'lodash';
+const { emitEvent, onEvent } = useEventBus();
+
 import AddCategory from '@/components/admin/admin-dashboard/manage-category/AddCategory.vue';
-const { emitEvent } = useEventBus();
 
 
 
@@ -25,23 +107,112 @@ export default {
         document.title = "Manage Category | Blog Admin"
     },
     components: {
-       AddCategory,
+        paginate: Paginate,
+        TableLoading,
+        AddCategory,
     },
     data() {
         return {
-    
+            total: 0,
+            last_page: 1,
+            paginateVisible: true,
+            search: '',
+            big_search: {
+                perPage: 5,
+                page: 1,
+                typesort: 'new',
+                sortlatest: 'true',
+                role: 'all',
+            },
+            query: '',
+            categories: [],
+            categorySelected: {
+                id: '',
+                name: '',
+                description_category: '',
+                search_number: '',
+            },
+            selectedCategories: [],
+            isLoading: false,
         }
     },
     mounted() {
         emitEvent('eventTitleHeader', 'Manage Category');
-        
+        const queryString = window.location.search;
+        const searchParams = new URLSearchParams(queryString);
+        this.search = searchParams.get('search') || '';
+        this.big_search = {
+            perPage: parseInt(searchParams.get('paginate')) || 5,
+            page: searchParams.get('page') || 1,
+            typesort: searchParams.get('typesort') || 'new',
+            sortlatest: searchParams.get('sortlatest') || 'true',
+            role: searchParams.get('role') || 'all',
+        }
+        this.getCategories();
+        onEvent('eventRegetCategories', () => {
+            this.getCategories();
+        });
     },
     methods: {
-        
+        reRenderPaginate: function () {
+            if (this.big_search.page > this.last_page) this.big_search.page = this.last_page;
+            this.paginateVisible = false;
+            this.$nextTick(() => { this.paginateVisible = true; });
+        },
+        getCategories: async function () {
+            this.selectedCategories = [];
+            this.isLoading = true;
+            this.query = '?search=' + this.search + '&typesort=' + this.big_search.typesort + '&sortlatest=' + this.big_search.sortlatest
+                + '&paginate=' + this.big_search.perPage + '&page=' + this.big_search.page;
+            window.history.pushState({}, null, this.query);
+
+            try {
+                const { data } = await AdminRequest.get('category/' + this.query)
+                this.categories = data.data;
+                this.total = data.total;
+                this.last_page = data.last_page;
+                this.isLoading = false;
+            }
+            catch (error) {
+                if (error.messages) emitEvent('eventError', error.messages[0]);
+                this.isLoading = false;
+            }
+            this.reRenderPaginate();
+        },
+        truncatedTitle(title, maxLength = 80) {
+            if (title.length > maxLength) return title.slice(0, maxLength) + '..';
+            else return title;
+        },
+        formatDate: function (date) {
+            const formattedDate = new Date(date);
+
+            const day = formattedDate.getDate();
+            const month = formattedDate.getMonth() + 1;
+            const year = formattedDate.getFullYear();
+
+            const formattedDateString = `${day}/${month}/${year}`;
+
+            return formattedDateString;
+        },
+        clickCallback: function (pageNum) {
+            this.big_search.page = pageNum;
+        },
+        handleSearchSelect() {
+            this.page = 1;
+            this.getCategories();
+        },
         
     },
     watch: {
-        
+        big_search: {
+            handler: function () {
+                this.getCategories();
+            },
+            deep: true
+        },
+        search: _.debounce(function () {
+            this.getCategories();
+        }, 500),
     }
 }
 </script>
