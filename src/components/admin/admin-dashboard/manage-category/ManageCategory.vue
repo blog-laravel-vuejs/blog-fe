@@ -34,6 +34,13 @@
                 <div class="input-group ">
                     <button content="Add Category" v-tippy data-toggle="modal" data-target="#addCategory" type="button"
                         class="btn btn-success"><i class="fa-solid fa-plus"></i></button>
+
+                </div>
+            </div>
+            <div class="pr-0" v-if="selectedCategories.length > 0">
+                <div class="input-group">
+                    <button content="Delete Many Category" v-tippy data-toggle="modal" data-target="#deleteManyCategory"
+                        type="button" class="btn btn-outline-danger mr-1"><i class="fa-solid fa-trash"></i></button>
                 </div>
             </div>
         </div>
@@ -44,6 +51,8 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th scope="col"><input ref="selectAllCheckbox" @change="selectAll()" type="checkbox" class="">
+                        </th>
                         <th scope="col">#</th>
                         <th scope="col"><i class="fa-solid fa-signature"></i>Name category</th>
                         <th scope="col"><i class="fa-solid fa-envelope"></i> Description category</th>
@@ -55,6 +64,8 @@
                 </thead>
                 <tbody>
                     <tr v-for="(category, index) in categories" :key="index">
+                        <th class="table-cell" scope="row"><input :checked="isSelected(category.id)" type="checkbox"
+                                class="" @change="handleSelect(category.id)"></th>
                         <th class="table-cell  " scope="row">#{{ (big_search.page - 1) * big_search.perPage + index + 1
                             }}
                         </th>
@@ -76,8 +87,9 @@
                                     data-target="#updateCategory">
                                     <i class="fa-solid fa-pen-nib"></i>
                                 </button>
-                                <button content="Delete category" v-tippy @click="selectCategory(category)" type="button"
-                                    class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteCategory">
+                                <button content="Delete category" v-tippy @click="selectCategory(category)"
+                                    type="button" class="btn btn-outline-danger" data-toggle="modal"
+                                    data-target="#deleteCategory">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
@@ -95,6 +107,7 @@
         <AddCategory></AddCategory>
         <UpdateCategory></UpdateCategory>
         <DeleteCategory></DeleteCategory>
+        <DeleteManyCategory :selectedCategories="selectedCategories"></DeleteManyCategory>
     </div>
 </template>
 
@@ -110,7 +123,7 @@ const { emitEvent, onEvent } = useEventBus();
 import AddCategory from '@/components/admin/admin-dashboard/manage-category/AddCategory.vue';
 import UpdateCategory from '@/components/admin/admin-dashboard/manage-category/UpdateCategory.vue';
 import DeleteCategory from '@/components/admin/admin-dashboard/manage-category/DeleteCategory.vue';
-
+import DeleteManyCategory from '@/components/admin/admin-dashboard/manage-category/DeleteManyCategory.vue';
 export default {
     name: "ManageCategory",
     setup() {
@@ -122,6 +135,7 @@ export default {
         AddCategory,
         UpdateCategory,
         DeleteCategory,
+        DeleteManyCategory
     },
     data() {
         return {
@@ -216,7 +230,23 @@ export default {
         selectCategory: function (category) {
             emitEvent('eventSelectCategory', category);
         },
+        isSelected(categoryId) {
+            return this.selectedCategories.includes(categoryId);
         },
+        handleSelect: function (categoryId) {
+            const index = this.selectedCategories.indexOf(categoryId);
+            if (index === -1) this.selectedCategories.push(categoryId);
+            else this.selectedCategories.splice(index, 1);
+        },
+        selectAll: function () {
+            const checkbox = this.$refs.selectAllCheckbox;
+            if (checkbox.checked) this.selectedCategories = this.categories.map(category => category.id);
+            else this.selectedCategories = [];
+        },
+        deleteManyCategory: function () {
+            emitEvent('selectManyCategory', this.categories);
+        },
+    },  
         watch: {
             big_search: {
                 handler: function () {
