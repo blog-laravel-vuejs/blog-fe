@@ -76,6 +76,10 @@
                                     data-target="#updateCategory">
                                     <i class="fa-solid fa-pen-nib"></i>
                                 </button>
+                                <button content="Delete category" v-tippy @click="selectCategory(category)" type="button"
+                                    class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteCategory">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -90,6 +94,7 @@
         </div>
         <AddCategory></AddCategory>
         <UpdateCategory></UpdateCategory>
+        <DeleteCategory></DeleteCategory>
     </div>
 </template>
 
@@ -104,7 +109,7 @@ const { emitEvent, onEvent } = useEventBus();
 
 import AddCategory from '@/components/admin/admin-dashboard/manage-category/AddCategory.vue';
 import UpdateCategory from '@/components/admin/admin-dashboard/manage-category/UpdateCategory.vue';
-
+import DeleteCategory from '@/components/admin/admin-dashboard/manage-category/DeleteCategory.vue';
 
 export default {
     name: "ManageCategory",
@@ -116,6 +121,7 @@ export default {
         TableLoading,
         AddCategory,
         UpdateCategory,
+        DeleteCategory,
     },
     data() {
         return {
