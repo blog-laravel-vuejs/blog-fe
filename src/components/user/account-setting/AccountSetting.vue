@@ -78,7 +78,7 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-12">
-                            <label><i class="fa-brands fa-line"></i> LINE User ID</label>
+                            <label><i class="fa-brands fa-line"></i> Username</label>
                             <input class="form-control" disabled v-model="user.line_user_id" placeholder="Username"
                                 type="text">
                         </div>

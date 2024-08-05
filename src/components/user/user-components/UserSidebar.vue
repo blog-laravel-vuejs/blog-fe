@@ -23,37 +23,12 @@
                   setting</span></router-link>
             </li>
           </span>
-          <!-- <span>
-            <li>
-              <router-link class="links" data-path="category-manage" :to="{ name: 'ManageCategory' }"><i
-                  class="fa-solid fa-tag"></i><span class="links_name">Category Manage</span></router-link>
-            </li>
-          </span> -->
-          <!-- <span :class="{ 'hide': user.role != 'manager' }">
-            <li>
-              <router-link class="links" data-path="member-account" :to="{ name: 'MemberAccount' }"><i
-                  class="fa-solid fa-users"></i><span class="links_name">Channel manages</span></router-link>
-            </li>
-          </span>
           <span>
             <li>
-              <router-link class="links" data-path="manage-content" :to="{ name: 'ManageContent' }"><i
-                  class="fa-solid fa-envelope-open-text"></i><span class="links_name">Manage content</span></router-link>
+              <router-link class="links" data-path="my-article" :to="{ name: 'MyArticle' }"><i
+                  class="fa-solid fa-blog"></i><span class="links_name">My Articles</span></router-link>
             </li>
           </span>
-          <span>
-            <li>
-              <router-link class="links" data-path="manage-broadcast" :to="{ name: 'ManageBroadcast' }"><i
-                  class="fa-brands fa-line"></i><span class="links_name">Manage
-                  broadcast</span></router-link>
-            </li>
-          </span>
-          <span :class="{ 'hide': user.role != 'manager' }">
-            <li>
-              <router-link class="links" data-path="statistical-channel" :to="{ name: 'StatisticalChannel' }"><i
-                  class="fa-solid fa-chart-pie"></i><span class="links_name">Statistical channel</span></router-link>
-            </li>
-          </span> -->
         </ul>
       </div>
       <div class="profile">

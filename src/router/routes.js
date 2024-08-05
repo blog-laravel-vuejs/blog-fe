@@ -19,12 +19,13 @@ import AccountSetting from "@/components/user/account-setting/AccountSetting";
 import UserResetPassword from "@/components/user/auth/UserResetPassword";
 import UserLogin from "@/components/user/auth/UserLogin";
 import AdminAccountSetting from "@/components/admin/account-setting/AdminAccountSetting";
-
+import MyArticle from '@/components/user/my-article/MyArticle.vue';
 
 
 
 //Other
 import CommonNotFound from '@/components/common/CommonNotFound'
+
 
 // middleware authUser
 const authUser = (to, from, next) =>{
@@ -89,6 +90,11 @@ const routes = [
         name: "AccountSetting",
         component: AccountSetting,
       },
+      {
+        path: "my-article",
+        name: "MyArticle",
+        component: MyArticle,
+      }
     ],
   },
   {
