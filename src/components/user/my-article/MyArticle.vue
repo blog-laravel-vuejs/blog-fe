@@ -1,13 +1,103 @@
 <template>
     <div id="main">
-        <div class="pr-1">
-            <div class="input-group ">
-                <button content="Add Article" v-tippy data-toggle="modal" data-target="#addArticle"
-                    type="button" class="btn btn-success"><i class="fa-solid fa-plus"></i></button>
+        <div class="row m-0 pb-2 d-flex justify-content-end" id="search-sort">
+            <div class="col-1 pl-0" id="page">
+                <select content="Pagination" v-tippy class="form-control" v-model="big_search.perPage">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
+            <div class="col-2 pl-0">
+                <select content="Sort by" v-tippy class="form-control" v-model="big_search.typesort">
+                    <option value="new">New</option>
+                    <option value="title">Title</option>
+                    <option value="name">Category</option>
+                    <option value="search_number">Search number</option>
+                </select>
+            </div>
+            <div class="col-2 pl-0">
+                <select content="In direction" v-tippy class="form-control" v-model="big_search.sortlatest">
+                    <option value="false">Ascending</option>
+                    <option value="true">Decrease</option>
+                </select>
+            </div>
+            <div class="col-3 pl-0">
+                <div content="Search articles" v-tippy class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    </div>
+                    <input v-model="search" type="text" class="form-control " id="inlineFormInputGroup"
+                        placeholder="Search...">
+                </div>
+            </div>
+            <div class="pr-1">
+                <div class="input-group ">
+                    <button content="Add Article" v-tippy data-toggle="modal" data-target="#addArticle" type="button"
+                        class="btn btn-success"><i class="fa-solid fa-plus"></i></button>
+                </div>
             </div>
         </div>
-    <AddArticle  ></AddArticle>
+        <div v-if="isLoading">
+            <TableLoading :cols="8" :rows="9"></TableLoading>
+        </div>
+        <div v-if="!isLoading" class="tableData">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col"><i class="fa-solid fa-signature"></i> Title</th>
+                        <th scope="col"><i class="fa-solid fa-envelope"></i> Name category</th>
+                        <th scope="col"><i class="fa-brands fa-line"></i>Search number</th>
+                        <th scope="col">Created at</th>
+                        <th scope="col">Updated at</th>
+                        <th scope="col"><i class="fa-solid fa-user-lock"></i> Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(article, index) in articles" :key="index">
+
+                        <th class="table-cell  " scope="row">#{{ (big_search.page - 1) * big_search.perPage + index
+                            + 1
+                            }}
+                        </th>
+                        <td class="table-cell name">
+                            <div class="nameAvatar">
+                                <img :src="article.thumbnail ? article.thumbnail_article : require('@/assets/avatar.jpg')"
+                                    alt="">
+                                <span class="nameMember text-center"> {{ article.title }}</span>
+                            </div>
+                        </td>
+                        <td class="table-cell name">
+                            <div class="nameAvatar">
+                                <img :src="article.thumbnail_category ? article.thumbnail_category : require('@/assets/avatar.jpg')"
+                                    alt="">
+                                <span class="nameMember text-center"> {{ article.name }}</span>
+                            </div>
+                        </td>
+                        <td class="table-cell text-center displaytext break">{{ article.search_number_article }}</td>
+                        <td class="table-cell text-center displayTime  ">{{ formatDate(article.created_at) }}</td>
+                        <td class="table-cell text-center">{{ formatDate(article.updated_at) }}</td>
+                        <td class="table-cell text-center">
+                            <div class="action">
+
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="divpaginate" class="mt-2">
+            <paginate v-if="paginateVisible" :page-count="last_page" :page-range="3" :margin-pages="2"
+                :click-handler="clickCallback" :initial-page="big_search.page" :prev-text="'Prev'" :next-text="'Next'"
+                :container-class="'pagination'" :page-class="'page-item'">
+            </paginate>
+        </div>
+        <AddArticle></AddArticle>
     </div>
+
 </template>
 
 <script>
@@ -15,36 +105,127 @@
 import useEventBus from '@/composables/useEventBus'
 
 
-const { emitEvent} = useEventBus();
-
-
+const { emitEvent,onEvent} = useEventBus();
+import Paginate from 'vuejs-paginate-next';
+import TableLoading from '@/components/common/TableLoading'
+import _ from 'lodash';
 import AddArticle from '@/components/user/my-article/AddArticle.vue';
+import UserRequest from '@/restful/UserRequest';
 
 
 export default {
     name: "MyArticle",
     setup() {
-        document.title = "Manage Account Member| Blog Admin"
+        document.title = "My Article| Blog User"
     },
     components: {
+        paginate: Paginate,
+        TableLoading,
         AddArticle,
        
 
     },
     data() {
         return {
-            
+            total: 0,
+            last_page: 1,
+            paginateVisible: true,
+            search: '',
+            big_search: {
+                perPage: 5,
+                page: 1,
+                typesort: 'new',
+                sortlatest: 'true',
+                role: 'all',
+            },
+            query: '',
+            articles: [],
+            articleSelected: {
+                id: '',
+                title: '',
+                search_number_article: '',
+                name: '',
+            },
+            selectedArticles: [],
+            isLoading: false,
         }
     },
     mounted() {
         emitEvent('eventTitleHeader', 'My Article');
-        
+        const queryString = window.location.search;
+        const searchParams = new URLSearchParams(queryString);
+        this.search = searchParams.get('search') || '';
+        this.big_search = {
+            perPage: parseInt(searchParams.get('paginate')) || 5,
+            page: searchParams.get('page') || 1,
+            typesort: searchParams.get('typesort') || 'new',
+            sortlatest: searchParams.get('sortlatest') || 'true',
+            role: searchParams.get('role') || 'all',
+        }
+        this.getArticles();
+        onEvent('eventRegetArticles', () => {
+            this.getArticles();
+        });
     },
     methods: {
-        
+         reRenderPaginate: function () {
+            if (this.big_search.page > this.last_page) this.big_search.page = this.last_page;
+            this.paginateVisible = false;
+            this.$nextTick(() => { this.paginateVisible = true; });
+        },
+        getArticles: async function () {
+            this.selectedArticles = [];
+            this.isLoading = true;
+            this.query = '?search=' + this.search + '&typesort=' + this.big_search.typesort + '&sortlatest=' + this.big_search.sortlatest
+                + '&paginate=' + this.big_search.perPage + '&page=' + this.big_search.page;
+            window.history.pushState({}, null, this.query);
+
+            try {
+                const { data } = await UserRequest.get('article/my-article' + this.query)
+                this.articles = data.data;
+                this.total = data.total;
+                this.last_page = data.last_page;
+                this.isLoading = false;
+            }
+            catch (error) {
+                if (error.messages) emitEvent('eventError', error.messages[0]);
+                this.isLoading = false;
+            }
+            this.reRenderPaginate();
+        },
+        truncatedTitle(title, maxLength = 80) {
+            if (title.length > maxLength) return title.slice(0, maxLength) + '..';
+            else return title;
+        },
+        formatDate: function (date) {
+            const formattedDate = new Date(date);
+
+            const day = formattedDate.getDate();
+            const month = formattedDate.getMonth() + 1;
+            const year = formattedDate.getFullYear();
+
+            const formattedDateString = `${day}/${month}/${year}`;
+
+            return formattedDateString;
+        },
+        clickCallback: function (pageNum) {
+            this.big_search.page = pageNum;
+        },
+        handleSearchSelect() {
+            this.page = 1;
+            this.getArticles();
+        },
     },
     watch: {
-        
+        big_search: {
+            handler: function () {
+                this.getArticles();
+            },
+            deep: true
+        },
+        search: _.debounce(function () {
+            this.getArticles();
+        }, 500),
     }
 }
 </script>
