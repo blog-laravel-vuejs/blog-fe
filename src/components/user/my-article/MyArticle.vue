@@ -82,15 +82,21 @@
                         <td class="table-cell text-center">
                             <div class="action">
                                 <button data-toggle="modal" data-target="#modal-view-detail-article"
-                                    v-tippy="{ content: 'View Detail' }" class="view-detail-content text-success mr-2"
+                                    v-tippy="{ content: 'View Detail' }" class="btn btn-outline-success mr-2"
                                     @click="selectArticle(article)">
-                                    <i class="fa-solid fa-eye"></i>
+                                    <i class="fa-solid fa-circle-info"></i>
                                 </button>
                                 <button content="Update Article" v-tippy @click="selectArticle(article)" type="button"
                                     class="btn btn-outline-primary mr-2" data-toggle="modal"
                                     data-target="#updateArticle">
                                     <i class="fa-solid fa-pen-nib"></i>
                                 </button>
+                                <button v-tippy="{content:article.is_show == 1 ?'Show':'Hide'}"
+                                    @click="selectArticle(article)" type="button" class="btn btn-outline-dark  mr-2"
+                                    data-toggle="modal" data-target="#hideArticle">
+                                    <i :class="{ 'fa-regular':true, 'fa-eye-slash':article.is_show==0 , 'fa-eye':article.is_show==1}"></i>
+                                </button>
+
                             </div>
                         </td>
                     </tr>
@@ -107,6 +113,7 @@
         <AddArticle></AddArticle>
         <DetailArticle></DetailArticle>
         <UpdateArticle></UpdateArticle>
+        <HideArticle></HideArticle>
     </div>
 
 </template>
@@ -125,7 +132,7 @@ import UserRequest from '@/restful/UserRequest';
 import AddArticle from '@/components/user/my-article/AddArticle.vue';
 import DetailArticle from '@/components/user/my-article/DetailArticle.vue';
 import UpdateArticle from '@/components/user/my-article/UpdateArticle.vue';
-
+import HideArticle from '@/components/user/my-article/HideArticle.vue';
 export default {
     name: "MyArticle",
     setup() {
@@ -137,8 +144,7 @@ export default {
         AddArticle,
         DetailArticle,
         UpdateArticle,
-       
-
+        HideArticle,
     },
     data() {
         return {
@@ -155,7 +161,7 @@ export default {
             },
             query: '',
             articles: [],
-            articleSelected: {
+            article: {
                 id: '',
                 title: '',
                 search_number_article: '',
@@ -181,6 +187,14 @@ export default {
             this.getArticles();
         });
         this.getArticles();
+        onEvent('eventUpdateIsShow', (id_article) => {
+            this.articles.forEach(article => {
+                if (article.id == id_article) {
+                    if (article.is_show == 0) article.is_show = 1;
+                    else article.is_show = 0;
+                }
+            });
+        });
     },
     methods: {
          reRenderPaginate: function () {
