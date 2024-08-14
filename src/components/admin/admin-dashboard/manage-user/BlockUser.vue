@@ -13,7 +13,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-warning" role="alert">
-                            <p>Warning: These people will be moved to <strong>{{ userSelected.is_block == 0 ?
+                            <p>Warning: These people will be moved to <strong>{{ userSelected.is_block == 1 ?
                                 'Locked' :
                                     'Normal' }}</strong> status in the system !</p>
                             <p>Name : <strong>{{ userSelected.name }}</strong> </p>
@@ -25,8 +25,8 @@
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" ref="closeButton"
                             id="close">Close</button>
                         <button type="button"
-                            :class="{ 'btn': true, 'btn-outline-danger': userSelected.is_block == 0, 'btn-outline-success': userSelected.is_block == 1 }"
-                            @click="deleteBook">
+                            :class="{ 'btn': true, 'btn-outline-danger': userSelected.is_block == 1, 'btn-outline-success': userSelected.is_block == 0 }"
+                            @click="changeBlock">
                             <i
                                 :class="{ 'fa-solid': true, 'fa-lock': userSelected.is_block == 0, 'fa-lock-open': userSelected.is_block == 1 }"></i>
                             {{ userSelected.is_block == 1 ? 'Block' : 'UnBlock' }}
@@ -56,7 +56,7 @@ export default {
         }
     },
     methods: {
-        deleteBook: async function () {
+        changeBlock: async function () {
             try {
                 if (this.userSelected.is_block == 1) this.dataSubmit.is_block = 0;
                 else this.dataSubmit.is_block = 1;
