@@ -8,7 +8,7 @@
                         <div class="modal-content custom-modal-width">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel"><strong><i
-                                            class="fa-solid fa-user-plus"></i>
+                                            class="fa-solid fa-square-plus"></i>
                                         Add Article</strong></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true" class="text-danger"><i
@@ -46,7 +46,7 @@
                                         <label><i class="fa-solid fa-list"></i> Category</label>
                                         <select v-model="article.id_category" class="form-control">
                                             <!-- <option value="0" selected >Select category</option> -->
-                                            <option v-for="category in this.categories" :key="category.id" 
+                                            <option v-for="category in this.categories" :key="category.id"
                                                 :value="category.id">{{category.name}}</option>
                                         </select>
                                     </div>
@@ -57,12 +57,12 @@
                                         <div></div>
                                         <div id="content">
                                             <quill-editor v-model:value="state.content" :options="state.editorOption"
-                                                :disabled="state.disabled"/>
+                                                :disabled="state.disabled" />
                                         </div>
                                     </div>
                                     <hr>
                                     <button type="submit" class="mt-4 btn-pers" id="login_button"><i
-                                            class="fa-solid fa-user-plus"></i> Add</button>
+                                            class="fa-solid fa-box-archive"></i> Add</button>
                                 </form>
                             </div>
                         </div>
@@ -103,7 +103,6 @@ export default {
     },
     data() {
         return {
-            id_article: null,
             article: {
                 title: null,
                 thumbnail: null,
@@ -112,6 +111,7 @@ export default {
                 id_category: null,
             },
             categories: [], 
+            previewImageSrc: null,
         }
     },
     mounted() {
@@ -158,7 +158,6 @@ export default {
 
                 const { messages } = await UserRequest.post('article/add',$formData, true);
                 emitEvent('eventSuccess', messages[0]);
-                for (let key in this.errors) this.errors[key] = null;
                 var closePW = window.document.getElementById('addArticle');
                 closePW.click();
                 this.resetData();
