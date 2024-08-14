@@ -77,7 +77,7 @@ export default {
                 is_accept: null
             },
             user: null,
-            check: false,
+           
         }
     },
     setup() {
