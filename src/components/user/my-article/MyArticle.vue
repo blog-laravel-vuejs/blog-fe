@@ -82,9 +82,14 @@
                         <td class="table-cell text-center">
                             <div class="action">
                                 <button data-toggle="modal" data-target="#modal-view-detail-article"
-                                    v-tippy="{ content: 'View Detail' }" class="view-detail-content text-success"
+                                    v-tippy="{ content: 'View Detail' }" class="view-detail-content text-success mr-2"
                                     @click="selectArticle(article)">
                                     <i class="fa-solid fa-eye"></i>
+                                </button>
+                                <button content="Update Article" v-tippy @click="selectArticle(article)" type="button"
+                                    class="btn btn-outline-primary mr-2" data-toggle="modal"
+                                    data-target="#updateArticle">
+                                    <i class="fa-solid fa-pen-nib"></i>
                                 </button>
                             </div>
                         </td>
@@ -101,6 +106,7 @@
         </div>
         <AddArticle></AddArticle>
         <DetailArticle></DetailArticle>
+        <UpdateArticle></UpdateArticle>
     </div>
 
 </template>
@@ -118,6 +124,7 @@ import _ from 'lodash';
 import UserRequest from '@/restful/UserRequest';
 import AddArticle from '@/components/user/my-article/AddArticle.vue';
 import DetailArticle from '@/components/user/my-article/DetailArticle.vue';
+import UpdateArticle from '@/components/user/my-article/UpdateArticle.vue';
 
 export default {
     name: "MyArticle",
@@ -129,6 +136,7 @@ export default {
         TableLoading,
         AddArticle,
         DetailArticle,
+        UpdateArticle,
        
 
     },
@@ -168,11 +176,11 @@ export default {
             typesort: searchParams.get('typesort') || 'new',
             sortlatest: searchParams.get('sortlatest') || 'true',
             role: searchParams.get('role') || 'all',
-        }
-        this.getArticles();
+        };
         onEvent('eventRegetArticles', () => {
             this.getArticles();
         });
+        this.getArticles();
     },
     methods: {
          reRenderPaginate: function () {
