@@ -126,7 +126,7 @@ export default {
         this.getCategories();
         emitEvent('eventTitleHeader', 'Update Article');
         onEvent('selectArticle', (article) => {
-            this.article = article;
+            this.article = Object.assign({},article);
             this.state.content = this.article.content;
             this.previewImageSrc = this.article.thumbnail_article;
             console.log(this.article);
