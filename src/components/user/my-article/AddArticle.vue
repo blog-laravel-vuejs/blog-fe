@@ -57,7 +57,7 @@
                                         <div></div>
                                         <div id="content">
                                             <quill-editor v-model:value="state.content" :options="state.editorOption"
-                                                :disabled="state.disabled" />
+                                                :disabled="state.disabled"/>
                                         </div>
                                     </div>
                                     <hr>
@@ -92,8 +92,8 @@ export default {
             editorOption: {
                 placeholder: "Content",
                 modules: {
-
                 },
+                theme: "snow",
             },
             disabled: false,
         });
@@ -145,6 +145,7 @@ export default {
             this.previewImageSrc = null;
             this.article.thumbnail = null;
             this.$refs.fileInput.value = '';
+           
         },
         addArticle: async function () {
             try {
@@ -161,6 +162,7 @@ export default {
                 var closePW = window.document.getElementById('addArticle');
                 closePW.click();
                 this.resetData();
+                this.state.content = '';
                 emitEvent('eventRegetArticles', '');
             }
             catch (error) {
