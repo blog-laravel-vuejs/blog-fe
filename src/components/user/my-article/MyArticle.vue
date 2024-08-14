@@ -81,7 +81,11 @@
                         <td class="table-cell text-center">{{ formatDate(article.updated_at) }}</td>
                         <td class="table-cell text-center">
                             <div class="action">
-
+                                <button data-toggle="modal" data-target="#modal-view-detail-article"
+                                    v-tippy="{ content: 'View Detail' }" class="view-detail-content text-success"
+                                    @click="selectArticle(article)">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -96,6 +100,7 @@
             </paginate>
         </div>
         <AddArticle></AddArticle>
+        <DetailArticle></DetailArticle>
     </div>
 
 </template>
@@ -109,9 +114,10 @@ const { emitEvent,onEvent} = useEventBus();
 import Paginate from 'vuejs-paginate-next';
 import TableLoading from '@/components/common/TableLoading'
 import _ from 'lodash';
-import AddArticle from '@/components/user/my-article/AddArticle.vue';
-import UserRequest from '@/restful/UserRequest';
 
+import UserRequest from '@/restful/UserRequest';
+import AddArticle from '@/components/user/my-article/AddArticle.vue';
+import DetailArticle from '@/components/user/my-article/DetailArticle.vue';
 
 export default {
     name: "MyArticle",
@@ -122,6 +128,7 @@ export default {
         paginate: Paginate,
         TableLoading,
         AddArticle,
+        DetailArticle,
        
 
     },
@@ -215,6 +222,9 @@ export default {
             this.page = 1;
             this.getArticles();
         },
+        selectArticle: function (article) {
+                emitEvent('selectArticle', article);
+            },
     },
     watch: {
         big_search: {
@@ -680,5 +690,13 @@ table thead th {
     #search-sort {
         gap: 2px;
     }
+}
+.view-detail-content {
+    transition: all 0.5s ease;
+    font-size: 22px;
+}
+.view-detail-content i:hover {
+    transition: all 0.5s ease;
+    color: var(--user-color);
 }
 </style>
