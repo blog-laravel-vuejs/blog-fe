@@ -15,7 +15,7 @@
                         <div class="alert alert-warning" role="alert">
                             <p>Warning: These people will be moved to <strong>{{ this.article.is_show == 1 ?
                                 'Hide' :
-                                'Show' }}</strong> status in the system !</p>
+                                    'Show' }}</strong> status in the system !</p>
                             <p>Title : <strong>{{ this.article.title }}</strong> </p>
                         </div>
                     </div>
@@ -39,38 +39,39 @@
 
 import UserRequest from '@/restful/UserRequest';
 import useEventBus from '@/composables/useEventBus';
-const {  emitEvent, onEvent } = useEventBus();
+const { emitEvent, onEvent } = useEventBus();
 
 export default {
     name: "HideArticle",
     props: {
-       
+
     },
     mounted() {
         onEvent('selectArticle', (article) => {
-            this.article = article;
-            console.log(this.article);
+            this.article = Object.assign({}, article);
+            //   this.article = article;
+            console.log("Article selected: ", this.article);
         });
     },
     data() {
         return {
             article: {
+                id: null,
                 is_show: '',
-            }
+            },
+
         }
     },
     methods: {
         changeShow: async function () {
             try {
-                if (this.article.is_show == 1) this.article.is_show = 0;
-                else this.article.is_show = 1;
-
-                const { messages } = await UserRequest.post('article/change-is-show/' + this.article.id,this.article, true);
+                this.article.is_show = this.article.is_show == 1 ? 0 : 1;
+                const { messages } = await UserRequest.post(`article/change-is-show/${this.article.id_article}`, this.article, true);
                 emitEvent('eventSuccess', messages[0]);
                 const closeButton = this.$refs.closeButton;
                 closeButton.click();
-                emitEvent('eventUpdateIsShow', this.article.id); // gán lại giá trị is block  
-                
+                // emitEvent('eventUpdateIsShow', this.article.id); // gán lại giá trị is block  
+                emitEvent('eventRegetArticles', '');
             }
             catch (error) {
                 if (error.errors) this.errors = error.errors;

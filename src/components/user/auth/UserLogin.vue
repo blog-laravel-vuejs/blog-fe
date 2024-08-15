@@ -98,7 +98,7 @@ export default {
 			},
 			isShow: false,
 			loginUser: {
-				email: 'tientran0410@yopmail.com',
+				email: 'kimtien@yopmail.com',
 				password: '123456'
 			},
 			resetPassword: {
