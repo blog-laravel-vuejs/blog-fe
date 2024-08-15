@@ -84,7 +84,12 @@
                         <td class="table-cell text-center">{{ formatDate(article.updated_at) }}</td>
                         <td class="table-cell text-center">
                             <div class="action">
-
+                                <button v-tippy="{ content: article.is_accept == 1 ? 'Accepted' : 'Unaccepted' }"
+                                    @click="selectArticle(article)" type="button" class="btn btn-outline-success  mr-2"
+                                    data-toggle="modal" data-target="#acceptArticle">
+                                    <i
+                                        :class="{ 'fa-solid': true, 'fa-eye-slash': article.is_accept == 0, ' fa-check': article.is_accept == 1 }"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -98,7 +103,7 @@
                 :container-class="'pagination'" :page-class="'page-item'">
             </paginate>
         </div>
-
+        <AcceptArticle></AcceptArticle>
     </div>
 
 </template>
@@ -114,6 +119,7 @@ import TableLoading from '@/components/common/TableLoading'
 import _ from 'lodash';
 
 import AdminRequest from '@/restful/AdminRequest';
+import AcceptArticle from '@/components/admin/admin-dashboard/manage-article/AcceptArticle.vue';
 export default {
     name: "ManageArticle",
     setup() {
@@ -122,6 +128,7 @@ export default {
     components: {
         paginate: Paginate,
         TableLoading,
+        AcceptArticle,
     },
     data() {
         return {
