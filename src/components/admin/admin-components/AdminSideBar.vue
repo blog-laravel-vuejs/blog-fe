@@ -35,6 +35,12 @@
                   class="fa-solid fa-list"></i><span class="links_name">Manager Category</span></router-link>
             </li>
           </span>
+          <span>
+            <li>
+              <router-link class="links" data-path="manage-article" :to="{ name: 'ManageArticle' }"><i
+                  class="fa-regular fa-newspaper"></i><span class="links_name">Manager Article</span></router-link>
+            </li>
+          </span>
         </ul>
       </div>
       <div class="profile">

@@ -20,7 +20,7 @@ import UserResetPassword from "@/components/user/auth/UserResetPassword";
 import UserLogin from "@/components/user/auth/UserLogin";
 import AdminAccountSetting from "@/components/admin/account-setting/AdminAccountSetting";
 import MyArticle from '@/components/user/my-article/MyArticle.vue';
-
+import ManageArticle from '@/components/admin/admin-dashboard/manage-article/ManageArticle.vue';
 
 
 //Other
@@ -94,7 +94,7 @@ const routes = [
         path: "my-article",
         name: "MyArticle",
         component: MyArticle,
-      }
+      },
     ],
   },
   {
@@ -133,6 +133,11 @@ const routes = [
             path: "manage-category",
             name: "ManageCategory",
             component: ManageCategory,
+          },
+          {
+            path: "manage-article",
+            name: "ManageArticle",
+            component: ManageArticle,
           },
         ],
       },

@@ -32,12 +32,6 @@
                         placeholder="Search...">
                 </div>
             </div>
-            <div class="pr-1">
-                <div class="input-group ">
-                    <button content="Add Article" v-tippy data-toggle="modal" data-target="#addArticle" type="button"
-                        class="btn btn-success"><i class="fa-solid fa-plus"></i></button>
-                </div>
-            </div>
         </div>
         <div v-if="isLoading">
             <TableLoading :cols="8" :rows="9"></TableLoading>
@@ -49,7 +43,8 @@
                         <th scope="col">#</th>
                         <th scope="col"><i class="fa-solid fa-signature"></i> Title</th>
                         <th scope="col"><i class="fa-solid fa-layer-group"></i> Name category</th>
-                        <th scope="col"><i class="fa-brands fa-line"></i> Search number</th>
+                        <th scope="col"><i class="fa-solid fa-at"></i> Author</th>
+                        <th scope="col"><i class="fa-brands fa-line"></i>Search number</th>
                         <th scope="col">Created at</th>
                         <th scope="col">Updated at</th>
                         <th scope="col"><i class="fa-solid fa-user-lock"></i> Action</th>
@@ -77,31 +72,19 @@
                                 <span class="nameMember text-center"> {{ article.name }}</span>
                             </div>
                         </td>
+                        <td class="table-cell name">
+                            <div class="nameAvatar">
+                                <img :src="article.avatar_user ? article.avatar_user : require('@/assets/avatar.jpg')"
+                                    alt="">
+                                <span class="nameMember text-center"> {{ article.name_user }}</span>
+                            </div>
+                        </td>
                         <td class="table-cell text-center displaytext break">{{ article.search_number_article }}</td>
                         <td class="table-cell text-center displayTime  ">{{ formatDate(article.created_at) }}</td>
                         <td class="table-cell text-center">{{ formatDate(article.updated_at) }}</td>
                         <td class="table-cell text-center">
                             <div class="action">
-                                <button data-toggle="modal" data-target="#modal-view-detail-article"
-                                    v-tippy="{ content: 'View Detail' }" class="btn btn-outline-success mr-2"
-                                    @click="selectArticle(article)">
-                                    <i class="fa-solid fa-circle-info"></i>
-                                </button>
-                                <button content="Update Article" v-tippy @click="selectArticle(article)" type="button"
-                                    class="btn btn-outline-primary mr-2" data-toggle="modal"
-                                    data-target="#updateArticle">
-                                    <i class="fa-solid fa-pen-nib"></i>
-                                </button>
-                                <button v-tippy="{ content: article.is_show == 1 ? 'Show' : 'Hide' }"
-                                    @click="selectArticle(article)" type="button" class="btn btn-outline-dark  mr-2"
-                                    data-toggle="modal" data-target="#hideArticle">
-                                    <i
-                                        :class="{ 'fa-regular': true, 'fa-eye-slash': article.is_show == 0, 'fa-eye': article.is_show == 1 }"></i>
-                                </button>
-                                <button content="Delete article" v-tippy @click="selectArticle(article)" type="button"
-                                    class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteArticle">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
+
                             </div>
                         </td>
                     </tr>
@@ -115,11 +98,7 @@
                 :container-class="'pagination'" :page-class="'page-item'">
             </paginate>
         </div>
-        <AddArticle></AddArticle>
-        <DetailArticle></DetailArticle>
-        <UpdateArticle></UpdateArticle>
-        <HideArticle></HideArticle>
-        <DeleteArticle></DeleteArticle>
+
     </div>
 
 </template>
@@ -134,25 +113,15 @@ import Paginate from 'vuejs-paginate-next';
 import TableLoading from '@/components/common/TableLoading'
 import _ from 'lodash';
 
-import UserRequest from '@/restful/UserRequest';
-import AddArticle from '@/components/user/my-article/AddArticle.vue';
-import DetailArticle from '@/components/user/my-article/DetailArticle.vue';
-import UpdateArticle from '@/components/user/my-article/UpdateArticle.vue';
-import HideArticle from '@/components/user/my-article/HideArticle.vue';
-import DeleteArticle from '@/components/user/my-article/DeleteArticle.vue';
+import AdminRequest from '@/restful/AdminRequest';
 export default {
-    name: "MyArticle",
+    name: "ManageArticle",
     setup() {
-        document.title = "My Article| Blog User"
+        document.title = "Manage Article| Blog Admin"
     },
     components: {
         paginate: Paginate,
         TableLoading,
-        AddArticle,
-        DetailArticle,
-        UpdateArticle,
-        HideArticle,
-        DeleteArticle
     },
     data() {
         return {
@@ -180,7 +149,7 @@ export default {
         }
     },
     mounted() {
-        emitEvent('eventTitleHeader', 'My Article');
+        emitEvent('eventTitleHeader', 'Manage Article');
         const queryString = window.location.search;
         const searchParams = new URLSearchParams(queryString);
         this.search = searchParams.get('search') || '';
@@ -195,13 +164,7 @@ export default {
             this.getArticles();
         });
         this.getArticles();
-        onEvent('eventUpdateIsShow', (id_article) => {
-            this.articles.forEach(article => {
-                if (article.id == id_article) {
-                    article.is_show = article.is_show == 1 ? 0 : 1;
-                }
-            });
-        });
+       
     },
     methods: {
         reRenderPaginate: function () {
@@ -217,7 +180,7 @@ export default {
             window.history.pushState({}, null, this.query);
 
             try {
-                const { data } = await UserRequest.get('article/my-article' + this.query)
+                const { data } = await AdminRequest.get('article/all' + this.query)
                 this.articles = data.data;
                 this.total = data.total;
                 this.last_page = data.last_page;
