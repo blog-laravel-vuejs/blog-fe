@@ -15,7 +15,7 @@
                         <div class="alert alert-warning" role="alert">
                             <p>Warning: These people will be moved to <strong>{{ this.article.is_show == 1 ?
                                 'Hide' :
-                                'Show' }}</strong> status in the system !</p>
+                                    'Show' }}</strong> status in the system !</p>
                             <p>Title : <strong>{{ this.article.title }}</strong> </p>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
                             :class="{ 'btn': true, 'btn-outline-danger': this.article.is_show == 1, 'btn-outline-success': this.article.is_show == 0 }"
                             @click="changeShow">
                             <i
-                                :class="{ 'fa-regular': true, 'fa-eye-slash': this.article.is_show ==1, 'fa-eye': this.article.is_show == 0 }"></i>
+                                :class="{ 'fa-regular': true, 'fa-eye-slash': this.article.is_show == 1, 'fa-eye': this.article.is_show == 0 }"></i>
                             {{ this.article.is_show == 1 ? 'Hide' : 'Show' }}
                         </button>
                     </div>
@@ -39,41 +39,38 @@
 
 import UserRequest from '@/restful/UserRequest';
 import useEventBus from '@/composables/useEventBus';
-const {  emitEvent, onEvent } = useEventBus();
+const { emitEvent, onEvent } = useEventBus();
 
 export default {
     name: "HideArticle",
     props: {
-       
+
     },
     mounted() {
         onEvent('selectArticle', (article) => {
-            //  this.article = Object.assign({}, article);
-              this.article = article;
-            console.log("Article selected: ",this.article);
+            this.article = Object.assign({}, article);
+            //   this.article = article;
+            console.log("Article selected: ", this.article);
         });
     },
     data() {
         return {
             article: {
-                id:null,
+                id: null,
                 is_show: '',
             },
-           
+
         }
     },
     methods: {
         changeShow: async function () {
             try {
                 this.article.is_show = this.article.is_show == 1 ? 0 : 1;
-                console.log(this.article.id);
-                const { data,messages } = await UserRequest.post(`article/change-is-show/${this.article.id}`,this.article, true);
-                console.log(data);
-                console.log("Updated data",this.article);
+                const { messages } = await UserRequest.post(`article/change-is-show/${this.article.id_article}`, this.article, true);
                 emitEvent('eventSuccess', messages[0]);
                 const closeButton = this.$refs.closeButton;
                 closeButton.click();
-                emitEvent('eventUpdateIsShow', this.article.id); // gán lại giá trị is block  
+                // emitEvent('eventUpdateIsShow', this.article.id); // gán lại giá trị is block  
                 emitEvent('eventRegetArticles', '');
             }
             catch (error) {

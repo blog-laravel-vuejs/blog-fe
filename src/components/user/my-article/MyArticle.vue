@@ -58,7 +58,8 @@
                 <tbody>
                     <tr v-for="(article, index) in articles" :key="index">
 
-                        <th class="table-cell  " scope="row">#{{ (big_search.page - 1) * big_search.perPage + index
+                        <th class="table-cell  " scope="row">#{{ article.id_article }} - {{ (big_search.page - 1) *
+                            big_search.perPage + index
                             + 1
                             }}
                         </th>
@@ -91,10 +92,11 @@
                                     data-target="#updateArticle">
                                     <i class="fa-solid fa-pen-nib"></i>
                                 </button>
-                                <button v-tippy="{content:article.is_show == 1 ?'Show':'Hide'}"
+                                <button v-tippy="{ content: article.is_show == 1 ? 'Show' : 'Hide' }"
                                     @click="selectArticle(article)" type="button" class="btn btn-outline-dark  mr-2"
                                     data-toggle="modal" data-target="#hideArticle">
-                                    <i :class="{ 'fa-regular':true, 'fa-eye-slash':article.is_show==0 , 'fa-eye':article.is_show==1}"></i>
+                                    <i
+                                        :class="{ 'fa-regular': true, 'fa-eye-slash': article.is_show == 0, 'fa-eye': article.is_show == 1 }"></i>
                                 </button>
 
                             </div>
@@ -123,7 +125,7 @@
 import useEventBus from '@/composables/useEventBus'
 
 
-const { emitEvent,onEvent} = useEventBus();
+const { emitEvent, onEvent } = useEventBus();
 import Paginate from 'vuejs-paginate-next';
 import TableLoading from '@/components/common/TableLoading'
 import _ from 'lodash';
@@ -196,7 +198,7 @@ export default {
         });
     },
     methods: {
-         reRenderPaginate: function () {
+        reRenderPaginate: function () {
             if (this.big_search.page > this.last_page) this.big_search.page = this.last_page;
             this.paginateVisible = false;
             this.$nextTick(() => { this.paginateVisible = true; });
@@ -244,13 +246,13 @@ export default {
             this.getArticles();
         },
         selectArticle: function (article) {
-                emitEvent('selectArticle', article);
-            },
+            emitEvent('selectArticle', article);
+        },
     },
     watch: {
         big_search: {
             handler: function () {
-            this.getArticles();
+                this.getArticles();
             },
             deep: true
         },
@@ -712,10 +714,12 @@ table thead th {
         gap: 2px;
     }
 }
+
 .view-detail-content {
     transition: all 0.5s ease;
     font-size: 22px;
 }
+
 .view-detail-content i:hover {
     transition: all 0.5s ease;
     color: var(--user-color);
