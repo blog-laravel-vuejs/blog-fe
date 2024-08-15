@@ -98,7 +98,11 @@
                                     <i
                                         :class="{ 'fa-regular': true, 'fa-eye-slash': article.is_show == 0, 'fa-eye': article.is_show == 1 }"></i>
                                 </button>
-
+                                <button content="Delete article" v-tippy @click="selectArticle(article)"
+                                    type="button" class="btn btn-outline-danger" data-toggle="modal"
+                                    data-target="#deleteArticle">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -116,6 +120,7 @@
         <DetailArticle></DetailArticle>
         <UpdateArticle></UpdateArticle>
         <HideArticle></HideArticle>
+        <DeleteArticle></DeleteArticle>
     </div>
 
 </template>
@@ -135,6 +140,7 @@ import AddArticle from '@/components/user/my-article/AddArticle.vue';
 import DetailArticle from '@/components/user/my-article/DetailArticle.vue';
 import UpdateArticle from '@/components/user/my-article/UpdateArticle.vue';
 import HideArticle from '@/components/user/my-article/HideArticle.vue';
+import DeleteArticle from '@/components/user/my-article/DeleteArticle.vue';
 export default {
     name: "MyArticle",
     setup() {
@@ -147,6 +153,7 @@ export default {
         DetailArticle,
         UpdateArticle,
         HideArticle,
+        DeleteArticle
     },
     data() {
         return {
