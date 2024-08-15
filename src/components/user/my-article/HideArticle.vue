@@ -26,7 +26,7 @@
                             :class="{ 'btn': true, 'btn-outline-danger': this.article.is_show == 1, 'btn-outline-success': this.article.is_show == 0 }"
                             @click="changeShow">
                             <i
-                                :class="{ 'fa-regular': true, 'fa-eye-slash': this.article.is_show == 1, 'fa-eye': this.article.is_show == 0 }"></i>
+                                :class="{ 'fa-regular': true, 'fa-eye-slash': this.article.is_show ==1, 'fa-eye': this.article.is_show == 0 }"></i>
                             {{ this.article.is_show == 1 ? 'Hide' : 'Show' }}
                         </button>
                     </div>
@@ -48,29 +48,33 @@ export default {
     },
     mounted() {
         onEvent('selectArticle', (article) => {
-            this.article = article;
-            console.log(this.article);
+            //  this.article = Object.assign({}, article);
+              this.article = article;
+            console.log("Article selected: ",this.article);
         });
     },
     data() {
         return {
             article: {
+                id:null,
                 is_show: '',
-            }
+            },
+           
         }
     },
     methods: {
         changeShow: async function () {
             try {
-                if (this.article.is_show == 1) this.article.is_show = 0;
-                else this.article.is_show = 1;
-
-                const { messages } = await UserRequest.post('article/change-is-show/' + this.article.id,this.article, true);
+                this.article.is_show = this.article.is_show == 1 ? 0 : 1;
+                console.log(this.article.id);
+                const { data,messages } = await UserRequest.post(`article/change-is-show/${this.article.id}`,this.article, true);
+                console.log(data);
+                console.log("Updated data",this.article);
                 emitEvent('eventSuccess', messages[0]);
                 const closeButton = this.$refs.closeButton;
                 closeButton.click();
                 emitEvent('eventUpdateIsShow', this.article.id); // gán lại giá trị is block  
-                
+                emitEvent('eventRegetArticles', '');
             }
             catch (error) {
                 if (error.errors) this.errors = error.errors;

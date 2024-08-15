@@ -161,7 +161,7 @@ export default {
             },
             query: '',
             articles: [],
-            article: {
+            articleSelected: {
                 id: '',
                 title: '',
                 search_number_article: '',
@@ -190,8 +190,7 @@ export default {
         onEvent('eventUpdateIsShow', (id_article) => {
             this.articles.forEach(article => {
                 if (article.id == id_article) {
-                    if (article.is_show == 0) article.is_show = 1;
-                    else article.is_show = 0;
+                    article.is_show = article.is_show == 1 ? 0 : 1;
                 }
             });
         });
@@ -251,7 +250,7 @@ export default {
     watch: {
         big_search: {
             handler: function () {
-                this.getArticles();
+            this.getArticles();
             },
             deep: true
         },
