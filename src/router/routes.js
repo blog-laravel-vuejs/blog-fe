@@ -11,7 +11,7 @@ import AdminLogin from "@/components/admin/auth/AdminLogin";
 
 import ManageMember from "@/components/admin/admin-dashboard/manage-admin/ManageMember.vue";
 import ManageCategory from "@/components/admin/admin-dashboard/manage-category/ManageCategory.vue";
-
+import ManageArticle from "@/components/admin/admin-dashboard/manage-article/ManageArticle.vue";
 // user
 import UserRegister from "@/components/user/auth/UserRegister";
 import UserMain from "@/components/user/UserMain";
@@ -20,11 +20,11 @@ import UserResetPassword from "@/components/user/auth/UserResetPassword";
 import UserLogin from "@/components/user/auth/UserLogin";
 import AdminAccountSetting from "@/components/admin/account-setting/AdminAccountSetting";
 import MyArticle from '@/components/user/my-article/MyArticle.vue';
-import ManageArticle from '@/components/admin/admin-dashboard/manage-article/ManageArticle.vue';
-
+import HomePage from '@/components/user/home-page/HomePage.vue';
+import ContentArticle from '@/components/user/home-page/ContentArticle.vue';
 
 //Other
-import CommonNotFound from '@/components/common/CommonNotFound'
+import CommonNotFound from '@/components/common/CommonNotFound';
 
 
 // middleware authUser
@@ -78,9 +78,21 @@ const routes = [
     name: "UserResetPassword",
     beforeEnter: loggedUser,
   },
-
   {
     path: "/",
+    component: HomePage,
+    name: "HomePage",
+    beforeEnter: authUser,
+    children: [
+      {
+        path: ":id",
+        name: "ContentArticle",
+        component:ContentArticle,
+      },
+    ],
+  },
+  {
+    path: "/user",
     component: UserMain,
     name: "UserMain",
     beforeEnter: authUser,

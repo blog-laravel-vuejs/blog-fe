@@ -10,12 +10,13 @@
       style="display: flex ; flex-direction:column; justify-content: space-between; flex-grow: 1; max-height: calc(100% - 60px); ">
       <div id="my-scroll" style="margin: 0px 14px 0 14px;">
         <ul class="nav-list" style="overflow: visible;">
-          <!-- <span>
+          <span>
             <li>
-              <router-link class="links" data-path="home-page" :to="{ name: 'HomePage' }"><i
-                  class="fa-solid fa-house"></i><span class="links_name">Home</span></router-link>
+              <!-- <router-link class="links" data-path="" :to="{ name: 'HomePage' }"><i
+                  class="fa-solid fa-house"></i><span class="links_name">Home</span></router-link> -->
+              <a href="#" @click="homePage"><i class="fa-solid fa-house"></i> HomePage</a>
             </li>
-          </span> -->
+          </span>
           <span>
             <li>
               <router-link class="links" data-path="account-setting" :to="{ name: 'AccountSetting' }"><i
@@ -97,6 +98,9 @@ export default {
       this.$router.push({ name: "UserLogin" });
       var appMain = window.document.getElementById('appMain');
       appMain.style.paddingLeft = '0px'
+    },
+    homePage: function () {
+      this.$router.push({ name: "HomePage" });
     },
     updateSidebarVisibility() {
       const isSmallScreen = window.innerWidth < 1200;

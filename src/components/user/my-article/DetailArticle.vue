@@ -4,7 +4,7 @@
             <div class="bigContainer">
                 <div class="modal fade" id="modal-view-detail-article" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
+                    <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content custom-modal-width">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-blog"></i>
@@ -18,7 +18,7 @@
                                 <form @submit.prevent="detailArticle()">
                                     <div id="auth">
                                         <div class="auth-info">
-                                            <strong> <img :src="article.avatar_user" alt="">
+                                            <strong> <img :src="article.avatar_user ? article.avatar : require('@/assets/avatar.jpg')" alt="">
                                                 {{ article.name_user }} </strong>
                                         </div>
                                         <div class="created-time">
@@ -36,7 +36,7 @@
                                         </div>
                                         <br>
                                         <p>Search number : {{ article.search_number_article }}</p>
-                                        <p>Is Article accept ?  {{ this.article.is_accept ? "Yes" :"No" }}</p>
+                                        <p>Is Article accept ? {{ this.article.is_accept ? "Yes" :"No" }}</p>
                                     </div>
                                 </form>
                             </div>
@@ -171,12 +171,9 @@ export default {
 }
 .auth-info img {
     width: 32px;
-    /* Đặt kích thước cụ thể cho ảnh để tránh chiếm quá nhiều không gian */
     height: 32px;
-    /* Khoảng cách giữa ảnh và tên người dùng */
     margin-right: 10px;
     border-radius: 50%;
-    /* Tùy chọn: Làm cho ảnh tròn nếu là ảnh đại diện */
 }
 
 .auth-info strong {

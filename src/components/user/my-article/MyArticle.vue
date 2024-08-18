@@ -32,7 +32,7 @@
                         placeholder="Search...">
                 </div>
             </div>
-            <div class="pr-1">
+            <div class="col-1 pr-1">
                 <div class="input-group ">
                     <button content="Add Article" v-tippy data-toggle="modal" data-target="#addArticle" type="button"
                         class="btn btn-success"><i class="fa-solid fa-plus"></i></button>

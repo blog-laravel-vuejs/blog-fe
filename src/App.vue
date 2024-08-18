@@ -26,7 +26,7 @@ export default {
     AtomSpinner
   },
   setup() {
-    document.title = "LINE Bot - Support LINE OA";
+    document.title = "Blog Laravel Vue";
   },
   data() {
     return {
